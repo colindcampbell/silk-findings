@@ -8,9 +8,10 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { AsyncTable } from "./AsyncTable";
 import { modelTypes } from "../constants";
+import * as R from "ramda";
 
 export function GroupedFindingsRowDetails(props) {
-  const { id } = props;
+  const { id, columns, ...row } = props;
   const [value, setValue] = useState("1");
 
   const handleChange = (e, newValue) => {
@@ -19,18 +20,21 @@ export function GroupedFindingsRowDetails(props) {
 
   return (
     <Box
-      sx={{ width: "100%", typography: "body1", height: 300 }}
+      sx={{ width: "100%", typography: "body1", height: 400 }}
       className="d-f fd-c ovf-a"
     >
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
             <Tab label="Findings" value="1" />
-            <Tab label="Graphs" value="2" />
-            <Tab label="Details" value="3" />
+            <Tab label="Details" value="2" />
           </TabList>
         </Box>
-        <TabPanel sx={{ padding: 1.5 }} value="1" className="f-1 d-f ovf-a">
+        <TabPanel
+          sx={{ padding: 0, ...(value !== "1" && { display: "none" }) }}
+          value="1"
+          className="f-1 d-f ovf-a"
+        >
           <AsyncTable
             label="Findings"
             model={modelTypes.findings}
@@ -38,16 +42,20 @@ export function GroupedFindingsRowDetails(props) {
             hasPagination={false}
           />
         </TabPanel>
-        <TabPanel sx={{ padding: 1.5 }} value="3">
+        <TabPanel sx={{ padding: 1.5 }} value="2">
           <Grid container component="dl" spacing={2}>
-            <Grid item>
-              <Typography component="dt" variant="h6">
-                Some Heading or Definition Term
-              </Typography>
-              <Typography component="dd" variant="body2">
-                Some Definition data
-              </Typography>
-            </Grid>
+            {R.map(({ name }) => {
+              return (
+                <Grid item key={name}>
+                  <Typography component="dt" variant="h6">
+                    {name}
+                  </Typography>
+                  <Typography component="dd" variant="body2">
+                    {R.prop(name, row)}
+                  </Typography>
+                </Grid>
+              );
+            }, columns)}
           </Grid>
         </TabPanel>
       </TabContext>

@@ -47,6 +47,33 @@ export const modelConstants = {
         sortField: "severityWeight",
         isSortEnabled: true,
       },
+      { name: "status" },
+      { name: "description" },
+      {
+        name: "ticket_created",
+        label: "Ticket Created At",
+        type: "datetime",
+        isSortEnabled: true,
+      },
+      {
+        name: "source_collbartion_tool_name",
+        label: "Collaboration Tool",
+      },
+      // {
+      //   name: "source_collbartion_tool_id",
+      //   label: "Collaboration Tool ID",
+      // },
+      {
+        name: "source_security_tool_name",
+        label: "Security Tool",
+      },
+      {
+        name: "source_security_tool_id",
+        label: "Security Tool ID",
+      },
+      // { name: "asset" },
+      // { name: "remediation_url", label: "Remediation URL" }, // TODO: make the text a hyperlink
+      { name: "remediation_text" },
     ],
     defaultSort: {
       field: "finding_created",

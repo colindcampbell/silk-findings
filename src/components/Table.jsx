@@ -136,7 +136,7 @@ const TableBodyRow = ({
                   left: 0,
                 }}
               >
-                <RowDetailRenderer {...row} />
+                <RowDetailRenderer columns={columns} {...row} />
               </Box>
             </Collapse>
           </TableCell>
