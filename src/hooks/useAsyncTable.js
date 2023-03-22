@@ -2,15 +2,16 @@ import { modelConstants } from "../constants";
 import * as R from "ramda";
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import { isNotNil } from "../utils";
 
 export const useAsyncTable = ({
   model,
   hasPagination = true,
-  fixedFilter = {},
+  fixedFilter = [],
 }) => {
   const [records, setRecords] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [filter, setFilter] = useState();
+  const [filter, setFilter] = useState(fixedFilter);
   const { sort, createSortHandler } = useSort({ model });
 
   const { perPageCount, pageOffsetCount, onPageChange, onRowsPerPageChange } =
@@ -19,7 +20,12 @@ export const useAsyncTable = ({
   useEffect(() => {
     axios
       .get(`/${model}/filter`, {
-        params: { sort, perPageCount, pageOffsetCount },
+        params: {
+          sort,
+          perPageCount,
+          pageOffsetCount,
+          ...(isNotNil(filter) && { filter: R.mergeLeft(fixedFilter, filter) }),
+        },
       })
       .then((response) => {
         setRecords(response.data.data);

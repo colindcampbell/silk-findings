@@ -3,6 +3,7 @@ import * as R from "ramda";
 import { modelTypes } from "../constants";
 import findings from "./data/raw-findings";
 import groupedFindings from "./data/grouped-findings";
+import { isNotNil } from "../utils";
 
 const db = new Dexie("silk");
 db.version(1).stores({
@@ -19,6 +20,7 @@ export const handleListResponse = async (model, request) => {
   const [list, filteredCount] = await db.open().then(async () => {
     let result = db[model];
     result = applySortToList(params, result);
+    result = applyFilterToList(params, result);
     const filteredCount = await result.count();
     const paginatedList = await calcPaginatedList(params, result);
     return [paginatedList, filteredCount];
@@ -41,6 +43,21 @@ function applySortToList(params, collection) {
       return sortedCollection.reverse();
     }
     return sortedCollection;
+  }
+  return collection;
+}
+
+function applyFilterToList(params, collection) {
+  const filteredCollection = filterByGroupFindingId(params, collection);
+  return filteredCollection;
+}
+
+function filterByGroupFindingId(params, collection) {
+  const groupIdFilterValue = params.get("filter[grouped_finding_id]");
+  if (isNotNil(groupIdFilterValue)) {
+    collection = collection.filter(
+      R.propEq("grouped_finding_id", parseInt(groupIdFilterValue, 10))
+    );
   }
   return collection;
 }

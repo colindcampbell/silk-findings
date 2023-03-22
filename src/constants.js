@@ -33,4 +33,24 @@ export const modelConstants = {
       direction: "desc",
     },
   },
+  [modelTypes.findings]: {
+    columns: [
+      {
+        name: "finding_created",
+        label: "Created At",
+        type: "datetime",
+        isSortEnabled: true,
+      },
+      {
+        name: "severity",
+        defaultSort: "asc",
+        sortField: "severityWeight",
+        isSortEnabled: true,
+      },
+    ],
+    defaultSort: {
+      field: "finding_created",
+      direction: "desc",
+    },
+  },
 };

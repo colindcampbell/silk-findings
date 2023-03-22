@@ -9,7 +9,13 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import { visuallyHidden } from "@mui/utils";
 import Box from "@mui/material/Box";
 import * as R from "ramda";
-import { calcLabelFromName } from "../utils";
+import { calcLabelFromName, isNotNil } from "../utils";
+import { useState } from "react";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import IconButton from "@mui/material/IconButton";
+import Collapse from "@mui/material/Collapse";
+import useResizeObserver from "use-resize-observer";
 
 export const Table = ({
   columns,
@@ -22,63 +28,123 @@ export const Table = ({
   records,
   sort,
   totalCount,
-}) => (
-  <>
-    <TableContainer className="f-1 ofv-a">
-      <MuiTable size="small" stickyHeader aria-label={label}>
-        <TableHead>
-          <TableRow>
+  RowDetailRenderer,
+  hasPagination,
+}) => {
+  const { ref, width: tableContainerWidth } = useResizeObserver();
+  return (
+    <>
+      <TableContainer className="f-1 ofv-a" ref={ref}>
+        <MuiTable size="small" stickyHeader aria-label={label}>
+          <TableHead>
+            <TableRow>
+              {isNotNil(RowDetailRenderer) && <TableCell />}
+              {R.map(
+                ({ name, ...columnConfig }) => (
+                  <TableHeaderCell
+                    key={name}
+                    name={name}
+                    sort={sort}
+                    createSortHandler={createSortHandler}
+                    {...columnConfig}
+                  />
+                ),
+                columns
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {R.map(
-              ({ name, ...columnConfig }) => (
-                <TableHeaderCell
-                  key={name}
-                  name={name}
-                  sort={sort}
-                  createSortHandler={createSortHandler}
-                  {...columnConfig}
+              (row) => (
+                <TableBodyRow
+                  key={row.id}
+                  columns={columns}
+                  RowDetailRenderer={RowDetailRenderer}
+                  tableContainerWidth={tableContainerWidth}
+                  {...row}
                 />
               ),
-              columns
+              records
             )}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {R.map(
-            (row) => (
-              <TableRow
-                key={row.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+          </TableBody>
+        </MuiTable>
+      </TableContainer>
+      {hasPagination && (
+        <TablePagination
+          rowsPerPageOptions={[25, 50, 100]}
+          component="div"
+          count={totalCount}
+          rowsPerPage={perPageCount}
+          page={pageOffsetCount}
+          onPageChange={onPageChange}
+          onRowsPerPageChange={onRowsPerPageChange}
+        />
+      )}
+    </>
+  );
+};
+
+const TableBodyRow = ({
+  columns,
+  RowDetailRenderer,
+  tableContainerWidth,
+  ...row
+}) => {
+  const hasRowDetails = isNotNil(RowDetailRenderer);
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <>
+      <TableRow
+        sx={{
+          "&:last-child td, &:last-child th": { border: 0 },
+          ...(hasRowDetails && { "& > *": { borderBottom: "unset" } }),
+        }}
+      >
+        {hasRowDetails && (
+          <TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setIsOpen((val) => !val)}
+            >
+              {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+        )}
+        {R.map(
+          ({ name }) => (
+            <TableCell component="th" scope="row" key={`${row.id}-${name}`}>
+              {R.prop(name, row)}
+            </TableCell>
+          ),
+          columns
+        )}
+      </TableRow>
+      {isOpen && (
+        <TableRow>
+          <TableCell
+            style={{ padding: 0 }}
+            colSpan={R.pipe(R.length, R.add(1))(columns)}
+          >
+            <Collapse in={isOpen} timeout="auto" unmountOnExit>
+              <Box
+                sx={{
+                  padding: 0.5,
+                  paddingBottom: 0,
+                  width: tableContainerWidth - 8, // subtract margin
+                  position: "sticky",
+                  left: 0,
+                }}
               >
-                {R.map(
-                  ({ name }) => (
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      key={`${row.id}-${name}`}
-                    >
-                      {R.prop(name, row)}
-                    </TableCell>
-                  ),
-                  columns
-                )}
-              </TableRow>
-            ),
-            records
-          )}
-        </TableBody>
-      </MuiTable>
-    </TableContainer>
-    <TablePagination
-      rowsPerPageOptions={[25, 50, 100]}
-      component="div"
-      count={totalCount}
-      rowsPerPage={perPageCount}
-      page={pageOffsetCount}
-      onPageChange={onPageChange}
-      onRowsPerPageChange={onRowsPerPageChange}
-    />
-  </>
-);
+                <RowDetailRenderer {...row} />
+              </Box>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      )}
+    </>
+  );
+};
 
 const TableHeaderCell = ({
   name,
