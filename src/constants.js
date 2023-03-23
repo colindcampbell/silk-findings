@@ -77,8 +77,9 @@ export const modelConstants = {
       // { name: "remediation_text" },
     ],
     defaultSort: {
-      field: "finding_created",
-      direction: "desc",
+      field: "severity",
+      direction: "asc",
+      sortField: "severityWeight",
     },
   },
 };

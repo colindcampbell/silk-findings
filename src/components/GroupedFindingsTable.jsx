@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import { modelTypes, rankedSeverities } from "../constants";
 import { AsyncTable } from "./AsyncTable";
 import { GroupedFindingsRowDetails } from "./GroupedFindingsRowDetails";
+import { create } from "zustand";
 
 import { useState, useMemo } from "react";
 import Input from "@mui/material/Input";
@@ -13,17 +14,29 @@ import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import * as R from "ramda";
 
-const initialFilter = {
+const initialState = {
   severity: rankedSeverities,
   quick: "",
 };
 
+export const useGroupedFindingsFilter = create((set, get) => ({
+  ...initialState,
+  setFilter: (key, value) => {
+    set(R.assoc(key, value));
+  },
+  setSeverity: (callback) => set(callback(get().severity)),
+}));
+
+const apiFilterSelector = R.pipe(
+  R.pick(["severity", "quick"]),
+  R.over(R.lensProp("severity"), R.join(","))
+);
+
 export const GroupedFindingsTable = () => {
-  const [filter, setFilter] = useState(initialFilter);
-  const apiFilterValue = useMemo(
-    () => R.over(R.lensProp("severity"), R.join(","))(filter),
-    [filter]
+  const [severity, setFilter] = useGroupedFindingsFilter(
+    R.props(["severity", "setFilter"])
   );
+  const apiFilter = useGroupedFindingsFilter(apiFilterSelector);
 
   return (
     <>
@@ -33,9 +46,9 @@ export const GroupedFindingsTable = () => {
       >
         <TextField variant="standard" placeholder="Search..." />
         <SeveritySelect
-          value={R.prop("severity", filter)}
+          value={severity}
           setValue={(val) => {
-            setFilter(R.assoc("severity", val));
+            setFilter("severity", val);
           }}
         />
       </Box>
@@ -44,7 +57,7 @@ export const GroupedFindingsTable = () => {
         model={modelTypes.groupedFindings}
         RowDetailRenderer={GroupedFindingsRowDetails}
         hasPagination
-        filter={apiFilterValue}
+        filter={apiFilter}
       />
     </>
   );
@@ -65,12 +78,10 @@ const allSeverities = rankedSeverities;
 
 const SeveritySelect = ({ value, setValue }) => {
   const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
+    const newValue = R.path(["target", "value"], event);
     setValue(
       // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
+      R.is(String, newValue) ? value.split(",") : newValue
     );
   };
   return (
