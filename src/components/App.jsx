@@ -1,6 +1,5 @@
 import "../styles/App.css";
 import { modelTypes } from "../constants";
-import { GroupedFindingsRowDetails } from "./GroupedFindingsRowDetails";
 import { AsyncTable } from "./AsyncTable";
 import { useState } from "react";
 import Box from "@mui/material/Box";
@@ -16,6 +15,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Paper from "@mui/material/Paper";
 import { ChartContainer } from "./ChartContainer";
 import useResizeObserver from "use-resize-observer";
+import { GroupedFindingsTable } from "./GroupedFindingsTable";
 
 function App() {
   const [value, setValue] = useState("1");
@@ -69,12 +69,7 @@ function App() {
               </AccordionDetails>
             </Accordion>
             <Paper className="f-1 d-f fd-c ovf-h w-100" elevation={1}>
-              <AsyncTable
-                label="Grouped Findings"
-                model={modelTypes.groupedFindings}
-                RowDetailRenderer={GroupedFindingsRowDetails}
-                hasPagination
-              />
+              <GroupedFindingsTable />
             </Paper>
           </TabPanel>
           <TabPanel

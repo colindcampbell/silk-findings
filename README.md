@@ -4,6 +4,7 @@ TODO:
 
 - Table filter bar
   - Table severity filter
+    - Convert filter state to a zustand store so that charts can update state
   - Callback when chart is clicked to filter table by severity
     - Also update the chart colors
   - Table quick filter

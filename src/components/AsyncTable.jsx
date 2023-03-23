@@ -7,7 +7,7 @@ export const AsyncTable = ({
   model,
   hasPagination,
   RowDetailRenderer,
-  fixedFilter,
+  filter,
 }) => {
   const {
     columns,
@@ -22,7 +22,7 @@ export const AsyncTable = ({
   } = useAsyncTable({
     model,
     hasPagination,
-    fixedFilter,
+    filter,
   });
   return (
     <Paper className="d-f f-1 fd-c w-100 h-100 ovf-h">

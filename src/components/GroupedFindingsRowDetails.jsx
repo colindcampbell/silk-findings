@@ -38,7 +38,7 @@ export function GroupedFindingsRowDetails(props) {
           <AsyncTable
             label="Findings"
             model={modelTypes.findings}
-            fixedFilter={{ grouped_finding_id: id }}
+            filter={{ grouped_finding_id: id }}
             hasPagination={false}
           />
         </TabPanel>

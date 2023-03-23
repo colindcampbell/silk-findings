@@ -4,14 +4,9 @@ import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { isNotNil } from "../utils";
 
-export const useAsyncTable = ({
-  model,
-  hasPagination = true,
-  fixedFilter = [],
-}) => {
+export const useAsyncTable = ({ model, hasPagination = true, filter }) => {
   const [records, setRecords] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
-  const [filter, setFilter] = useState(fixedFilter);
   const { sort, createSortHandler } = useSort({ model });
 
   const { perPageCount, pageOffsetCount, onPageChange, onRowsPerPageChange } =
@@ -24,14 +19,14 @@ export const useAsyncTable = ({
           sort,
           perPageCount,
           pageOffsetCount,
-          ...(isNotNil(filter) && { filter: R.mergeLeft(fixedFilter, filter) }),
+          ...(isNotNil(filter) && { filter }),
         },
       })
       .then((response) => {
         setRecords(response.data.data);
         setTotalCount(response.data.meta.totalCount);
       });
-  }, [sort.field, sort.direction, perPageCount, pageOffsetCount]);
+  }, [sort.field, sort.direction, perPageCount, pageOffsetCount, filter]);
 
   const exports = useMemo(
     () => ({

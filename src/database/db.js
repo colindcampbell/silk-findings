@@ -26,11 +26,11 @@ export const handleListResponse = async (model, request) => {
     return [paginatedList, filteredCount];
   });
 
-  const totalCount = await db[model].count();
+  // const totalCount = await db[model].count();
 
   return {
     data: list,
-    meta: { totalCount, filteredCount },
+    meta: { totalCount: filteredCount },
   };
 };
 
@@ -76,11 +76,14 @@ function applySortToList(params, collection) {
 }
 
 function applyFilterToList(params, collection) {
-  const filteredCollection = filterByGroupFindingId(params, collection);
+  const filteredCollection = R.pipe(
+    filterByGroupFindingId(params),
+    filterBySeverity(params)
+  )(collection);
   return filteredCollection;
 }
 
-function filterByGroupFindingId(params, collection) {
+const filterByGroupFindingId = R.curry((params, collection) => {
   const groupIdFilterValue = params.get("filter[grouped_finding_id]");
   if (isNotNil(groupIdFilterValue)) {
     collection = collection.filter(
@@ -88,7 +91,17 @@ function filterByGroupFindingId(params, collection) {
     );
   }
   return collection;
-}
+});
+
+const filterBySeverity = R.curry((params, collection) => {
+  const severityFilter = params.get("filter[severity]");
+  if (isNotNil(severityFilter)) {
+    collection = collection.filter(
+      R.pipe(R.prop("severity"), R.includes(R.__, severityFilter))
+    );
+  }
+  return collection;
+});
 
 async function calcPaginatedList(params, collection) {
   const perPageCount = params.get("perPageCount") || 100;
