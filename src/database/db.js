@@ -3,7 +3,7 @@ import * as R from "ramda";
 import { modelTypes } from "../constants";
 import findings from "./data/raw-findings";
 import groupedFindings from "./data/grouped-findings";
-import { isNotNil } from "../utils";
+import { existsAndIsNotEmpty, isNotNil } from "../utils";
 
 const db = new Dexie("silk");
 db.version(1).stores({
@@ -78,7 +78,8 @@ function applySortToList(params, collection) {
 function applyFilterToList(params, collection) {
   const filteredCollection = R.pipe(
     filterByGroupFindingId(params),
-    filterBySeverity(params)
+    filterBySeverity(params),
+    filterByText(params)
   )(collection);
   return filteredCollection;
 }
@@ -98,6 +99,16 @@ const filterBySeverity = R.curry((params, collection) => {
   if (isNotNil(severityFilter)) {
     collection = collection.filter(
       R.pipe(R.prop("severity"), R.includes(R.__, severityFilter))
+    );
+  }
+  return collection;
+});
+
+const filterByText = R.curry((params, collection) => {
+  const textFilter = params.get("filter[text]");
+  if (existsAndIsNotEmpty(textFilter)) {
+    collection = collection.filter(
+      R.pipe(R.values, R.toString, R.includes(textFilter))
     );
   }
   return collection;

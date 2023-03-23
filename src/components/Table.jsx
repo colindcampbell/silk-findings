@@ -71,6 +71,7 @@ export const Table = ({
       </TableContainer>
       {hasPagination && (
         <TablePagination
+          sx={{ borderTop: 1, borderColor: "divider" }}
           rowsPerPageOptions={[25, 50, 100]}
           component="div"
           count={totalCount}
@@ -123,7 +124,7 @@ const TableBodyRow = ({
       {isOpen && (
         <TableRow>
           <TableCell
-            style={{ padding: 0 }}
+            style={{ padding: 1 }}
             colSpan={R.pipe(R.length, R.add(1))(columns)}
           >
             <Collapse in={isOpen} timeout="auto" unmountOnExit>
