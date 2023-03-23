@@ -34,6 +34,34 @@ export const handleListResponse = async (model, request) => {
   };
 };
 
+export const handleGroupedResponse = async (model, request) => {
+  const params = new URLSearchParams(R.path(["url", "search"], request));
+  const field = params.get("field");
+
+  const records = await db.open().then(async () => {
+    let result = db[model];
+    result = applySortToList(params, result);
+    return result.toArray();
+  });
+
+  const grouped = R.reduce(
+    (acc, record) => {
+      const recordValue = R.prop(field, record);
+      const accValue = R.propOr(0, recordValue, acc);
+      return {
+        ...acc,
+        [recordValue]: accValue + 1,
+      };
+    },
+    {},
+    records
+  );
+
+  return {
+    data: grouped,
+  };
+};
+
 function applySortToList(params, collection) {
   const sortField = params.get("sort[sortField]") || params.get("sort[field]");
   if (sortField) {

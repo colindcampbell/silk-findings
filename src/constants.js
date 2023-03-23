@@ -81,3 +81,14 @@ export const modelConstants = {
     },
   },
 };
+
+export const chartColorsByField = {
+  severity: {
+    critical: "#ED8269",
+    high: "#F5C94E",
+    medium: "#B6CBE8",
+    low: "#AAC988",
+  },
+};
+
+export const rankedSeverities = ["critical", "high", "medium", "low"];

@@ -11,3 +11,5 @@ export const capitalize = R.ifElse(
 export const calcLabelFromName = (name) => {
   return R.pipe(R.split("_"), R.map(capitalize), R.join(" "))(name);
 };
+
+export const mapIndexed = R.addIndex(R.map);

@@ -1,6 +1,5 @@
 import * as R from "ramda";
-
-const rankedSeverities = ["critical", "high", "medium", "low"];
+import { rankedSeverities } from "../constants";
 
 export const decorateList = (model, list) =>
   R.map(

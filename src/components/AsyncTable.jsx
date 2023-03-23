@@ -25,7 +25,7 @@ export const AsyncTable = ({
     fixedFilter,
   });
   return (
-    <Paper className="d-f fd-c w-100 h-100 ovf-h">
+    <Paper className="d-f f-1 fd-c w-100 h-100 ovf-h">
       <Table
         columns={columns}
         createSortHandler={createSortHandler}

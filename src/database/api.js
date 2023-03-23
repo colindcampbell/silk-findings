@@ -1,6 +1,6 @@
 import { setupWorker, rest } from "msw";
 import { modelTypes } from "../constants";
-import { handleListResponse } from "./db";
+import { handleListResponse, handleGroupedResponse } from "./db";
 
 export const worker = setupWorker(
   ...[
@@ -15,5 +15,15 @@ export const worker = setupWorker(
       );
       return res(ctx.status(200), ctx.json(response));
     }),
+    rest.get(
+      `/${modelTypes.groupedFindings}/grouped`,
+      async (req, res, ctx) => {
+        const response = await handleGroupedResponse(
+          modelTypes.groupedFindings,
+          req
+        );
+        return res(ctx.status(200), ctx.json(response));
+      }
+    ),
   ]
 );
