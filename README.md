@@ -43,3 +43,6 @@ Once started, go to http://localhost:4173/
 - Add the graphs and filter bar to the Raw Findings table
 - Fix the the page layout so that the width of the app container doesn't have to be passed down
 - Tree map visualization for severity where you can drill down on progress for each severity type
+- Make dates more readable
+- Make columns configurable with resizing, rearranging, and visibility toggling
+- Persist table settings to local storage.
