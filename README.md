@@ -26,3 +26,13 @@ Once started, go to http://localhost:4173/
 - State management: [Zustand](https://docs.pmnd.rs/zustand/getting-started/introduction)
 - Charts: [react-chartjs-2](https://react-chartjs-2.js.org/)
 - Functional programming utilities: [Ramda](https://ramdajs.com/)
+
+### Notable Features
+
+- Clicking on the graph severity data also toggles that severity in the table filters. This is reflected by graying out the chart data that is filtered out in the table. This interaction also works the other way around
+- The # of Findings cells are clickable and expanding to see the row details
+- Sorting on the Severity, Time, and SLA fields
+- Configurable table pagination
+- Query caching for near instant rendering of the table detail panel
+- Sorted Raw Findings table in addition to the Grouped Findings table
+- Text filtering on the table
