@@ -19,7 +19,7 @@ export const GroupedFindingsRowDetails = ({ id, columns, ...row }) => {
 
   return (
     <Box
-      sx={{ width: "100%", typography: "body1", height: 400 }}
+      sx={{ width: "100%", typography: "body1", height: 360 }}
       className="d-f fd-c ovf-a"
     >
       <TabContext value={value}>
