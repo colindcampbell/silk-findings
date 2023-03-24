@@ -1,14 +1,14 @@
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { AsyncTable } from "./AsyncTable";
 import { modelTypes } from "../constants";
 import * as R from "ramda";
+import { DefinitionList } from "./DefinitionList";
+import { calcLabelFromName } from "../utils";
 
 export function GroupedFindingsRowDetails(props) {
   const { id, columns, ...row } = props;
@@ -43,20 +43,18 @@ export function GroupedFindingsRowDetails(props) {
           />
         </TabPanel>
         <TabPanel sx={{ padding: 1.5 }} value="2">
-          <Grid container component="dl" spacing={2}>
-            {R.map(({ name }) => {
-              return (
-                <Grid item key={name}>
-                  <Typography component="dt" variant="h6">
-                    {name}
-                  </Typography>
-                  <Typography component="dd" variant="body2">
-                    {R.prop(name, row)}
-                  </Typography>
-                </Grid>
-              );
-            }, columns)}
-          </Grid>
+          <DefinitionList
+            items={R.map(
+              ({ name, label }) => ({
+                label: label || calcLabelFromName(name),
+                value: R.pipe(
+                  R.prop(name),
+                  R.when(R.is(String), calcLabelFromName)
+                )(row),
+              }),
+              columns
+            )}
+          />
         </TabPanel>
       </TabContext>
     </Box>

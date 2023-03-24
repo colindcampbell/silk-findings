@@ -29,14 +29,14 @@ ChartJS.register(
   ChartDataLabels
 );
 
-export const Charts = ({ field, sort }) => {
+export const Charts = ({ field, sort, model }) => {
   const [severity, setSeverity] = useGroupedFindingsFilter(
     R.props(["severity", "setSeverity"])
   );
 
   const { isLoading, data: { barData = {}, pieData = {} } = {} } = useQuery({
     queryKey: [
-      modelTypes.groupedFindings,
+      model,
       "grouped",
       {
         field,

@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "preview": "vite build && vite preview",
     "i-clean": "rm -rf ./node_modules && rm -f ./package-lock.json && npm i"
   },
   "repository": {
@@ -20,9 +21,7 @@
   "homepage": "https://github.com/colindcampbell/silk-findings#readme",
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
+    "react-dom": "^18.2.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@fontsource/roboto": "^4.5.8",
@@ -47,6 +46,7 @@
     "vite": "^4.2.0",
     "zustand": "^4.3.6"
   },
+  "devDependencies": {},
   "msw": {
     "workerDirectory": "public"
   }

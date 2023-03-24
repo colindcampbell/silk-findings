@@ -3,6 +3,7 @@ import * as R from "ramda";
 export const isNotNil = R.pipe(R.isNil, R.not);
 const isNotEmpty = R.pipe(R.isEmpty, R.not);
 export const existsAndIsNotEmpty = R.allPass([isNotNil, isNotEmpty]);
+export const notEquals = R.pipe(R.equals, R.not);
 
 export const capitalize = R.ifElse(
   R.is(String),

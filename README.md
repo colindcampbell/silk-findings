@@ -1,20 +1,22 @@
-# silk-findings
+# Silk Findings
 
-TODO:
+## Running Locally
 
-- Table filter bar
-  - Table severity filter
-    - Convert filter state to a zustand store so that charts can update state
-  - Callback when chart is clicked to filter table by severity
-    - Also update the chart colors
-  - Table quick filter
-- React query for data fetching
-- Table cell renderers
-  - Issue count
-  - Severity
-  - Progress
-  - Assignee
-  - Hyperlinks
-- Details DL renderer
-- Cleanup/layout
-- Documentation
+Install packages and start server:
+
+```js
+npm i && npm run preview
+```
+
+Go to http://localhost:4173/
+
+## Tools Used
+
+### Backend
+
+- Local database using the browser IndexedDB: [Dexie](https://dexie.org/)
+- Request redirect service: [MSW](https://mswjs.io/)
+
+### Frontend
+
+-

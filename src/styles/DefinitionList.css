@@ -1,0 +1,20 @@
+dl.container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: repeat(50, min-content);
+}
+dt {
+  grid-column-start: 1;
+  padding: 8px;
+}
+dt:nth-child(4n - 1) {
+  background: #f5f5f5;
+}
+dd {
+  grid-column-start: 0;
+  padding: 8px;
+  margin: 0;
+}
+dd:nth-child(4n) {
+  background: #f5f5f5;
+}

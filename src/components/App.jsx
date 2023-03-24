@@ -1,12 +1,12 @@
 import "../styles/App.css";
-import { modelTypes } from "../constants";
+import { knownColumnNames, modelTypes } from "../constants";
 import { AsyncTable } from "./AsyncTable";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
+import MuiTabPanel from "@mui/lab/TabPanel";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -16,6 +16,7 @@ import Paper from "@mui/material/Paper";
 import { Charts } from "./Charts";
 import useResizeObserver from "use-resize-observer";
 import { GroupedFindingsTable } from "./GroupedFindingsTable";
+import { notEquals } from "../utils";
 
 function App() {
   const [value, setValue] = useState("1");
@@ -29,28 +30,24 @@ function App() {
     <div className="App" ref={ref}>
       <Box
         sx={{ width: "100%", typography: "body1" }}
-        className="d-f fd-c ovf-h h-100 w-100"
+        className="d-f fd-c ovf-h h-100"
       >
         <TabContext value={value}>
-          <Box
-            sx={{ borderBottom: 1, borderColor: "divider" }}
-            className="w-100"
-          >
-            <TabList onChange={handleChange} aria-label="lab API tabs example">
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+            <TabList onChange={handleChange} aria-label="Findings Categories">
               <Tab label="Grouped Findings" value="1" />
               <Tab label="Raw Findings" value="2" />
             </TabList>
           </Box>
-          <TabPanel
-            sx={{
-              padding: 1,
-              width: width - 16,
-              ...(value !== "1" && { display: "none" }),
-            }}
-            value="1"
-            className="f-1 d-f fd-c ovf-h h-100 w-100"
-          >
-            <Accordion sx={{ marginBottom: 1 }} className="ovf-h">
+          <TabPanel currentTab={value} value="1" width={width}>
+            <Accordion
+              TransitionProps={{
+                timeout: "auto",
+              }}
+              defaultExpanded
+              sx={{ marginBottom: 1 }}
+              className="ovf-h"
+            >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
@@ -63,8 +60,9 @@ function App() {
                 className="d-f ovf-a jc-c"
               >
                 <Charts
-                  field="severity"
+                  field={knownColumnNames.severity}
                   sort={{ field: "severityWeight", direction: "asc" }}
+                  model={modelTypes.groupedFindings}
                 />
               </AccordionDetails>
             </Accordion>
@@ -72,11 +70,7 @@ function App() {
               <GroupedFindingsTable />
             </Paper>
           </TabPanel>
-          <TabPanel
-            sx={{ padding: 1, ...(value !== "2" && { display: "none" }) }}
-            value="2"
-            className="f-1 d-f ovf-a h-100"
-          >
+          <TabPanel currentTab={value} value="2" width={width}>
             <AsyncTable
               label="Findings"
               model={modelTypes.findings}
@@ -90,3 +84,19 @@ function App() {
 }
 
 export default App;
+
+const TabPanel = ({ width, value, currentTab, children }) => {
+  return (
+    <MuiTabPanel
+      sx={{
+        padding: 1,
+        width: width - 16,
+        ...(notEquals(value, currentTab) && { display: "none" }),
+      }}
+      value={value}
+      className="f-1 d-f fd-c ovf-h h-100 w-100"
+    >
+      {children}
+    </MuiTabPanel>
+  );
+};
