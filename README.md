@@ -30,7 +30,7 @@ Once started, go to http://localhost:4173/
 ## Notable Features
 
 - Clicking on the graph severity data also toggles that severity in the table filters. This is reflected by graying out the chart data that is filtered out in the table. This interaction also works the other way around
-- The # of Findings cells are clickable and expanding to see the row details
+- The # of Findings cells are clickable and toggle visibility of the row details
 - Sorting on the Severity, Time, and SLA fields
 - Configurable table pagination
 - Query caching for near instant rendering of the table detail panel
