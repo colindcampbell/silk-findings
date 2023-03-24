@@ -84,3 +84,20 @@ export const calcPaginatedList = async (params, collection) => {
     .toArray();
   return paginatedList;
 };
+
+export const calcGroupedValues = (params, records) => {
+  const field = params.get("field");
+  const grouped = R.reduce(
+    (acc, record) => {
+      const recordValue = R.prop(field, record);
+      const accValue = R.propOr(0, recordValue, acc);
+      return {
+        ...acc,
+        [recordValue]: accValue + 1,
+      };
+    },
+    {},
+    records
+  );
+  return grouped;
+};

@@ -3,7 +3,12 @@ import * as R from "ramda";
 import { modelTypes } from "../constants";
 import findings from "./data/raw-findings";
 import groupedFindings from "./data/grouped-findings";
-import { applyFilterToList, applySortToList, calcPaginatedList } from "./utils";
+import {
+  applyFilterToList,
+  applySortToList,
+  calcGroupedValues,
+  calcPaginatedList,
+} from "./utils";
 
 const db = new Dexie("silk");
 db.version(1).stores({
@@ -18,43 +23,31 @@ db[modelTypes.groupedFindings].bulkAdd(groupedFindings);
 export const handleListResponse = async (model, request) => {
   const params = new URLSearchParams(R.path(["url", "search"], request));
 
-  const [list, totalCount] = await db.open().then(async () => {
-    let result = db[model];
-    result = applySortToList(params, result);
-    result = applyFilterToList(params, result);
-    const totalCount = await result.count();
-    const paginatedList = await calcPaginatedList(params, result);
+  const [records, totalCount] = await db.open().then(async () => {
+    let collection = db[model];
+    collection = applySortToList(params, collection);
+    collection = applyFilterToList(params, collection);
+    const totalCount = await collection.count();
+    const paginatedList = await calcPaginatedList(params, collection);
     return [paginatedList, totalCount];
   });
 
   return {
-    data: list,
+    data: records,
     meta: { totalCount },
   };
 };
 
 export const handleGroupedResponse = async (model, request) => {
   const params = new URLSearchParams(R.path(["url", "search"], request));
-  const field = params.get("field");
 
   const records = await db.open().then(async () => {
-    let result = db[model];
-    result = applySortToList(params, result);
-    return result.toArray();
+    let collection = db[model];
+    collection = applySortToList(params, collection);
+    return collection.toArray();
   });
 
-  const grouped = R.reduce(
-    (acc, record) => {
-      const recordValue = R.prop(field, record);
-      const accValue = R.propOr(0, recordValue, acc);
-      return {
-        ...acc,
-        [recordValue]: accValue + 1,
-      };
-    },
-    {},
-    records
-  );
+  const grouped = calcGroupedValues(params, records);
 
   return {
     data: grouped,

@@ -27,7 +27,7 @@ export const knownColumnNames = {
   asset: "asset",
   remediation_url: "remediation_url",
   remediation_text: "remediation_text",
-  severityWeight: "severityWeight",
+  severityWeight: "severityWeight", // Added for sorting
 };
 
 export const sortDirections = {
@@ -46,7 +46,7 @@ export const knownColumnTypes = {
 };
 
 export const knownIconTypes = {
-  avatar: "avatart",
+  avatar: "avatar",
   tool: "tool",
 };
 
