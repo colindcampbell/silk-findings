@@ -8,9 +8,11 @@ import Box from "@mui/material/Box";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import * as R from "ramda";
-import { rankedSeverities } from "../constants";
+import { highToLowRankedSeverities, knownColumnNames } from "../constants";
 import { useCallback, useState } from "react";
 import { debounce } from "debounce";
+import { SeverityCell } from "./CellRenderers";
+import { capitalize } from "../utils";
 
 export const FilterBar = ({ severity, setSeverity, text, setText }) => {
   return (
@@ -58,8 +60,6 @@ const MenuProps = {
   },
 };
 
-const allSeverities = rankedSeverities;
-
 const SeveritySelect = ({ value, setValue }) => {
   const handleChange = (event) => {
     const newValue = R.path(["target", "value"], event);
@@ -69,7 +69,7 @@ const SeveritySelect = ({ value, setValue }) => {
     );
   };
   return (
-    <FormControl sx={{ m: 0, width: 300 }}>
+    <FormControl sx={{ m: 0 }}>
       <Select
         labelId="demo-multiple-checkbox-label"
         id="demo-multiple-checkbox"
@@ -77,17 +77,35 @@ const SeveritySelect = ({ value, setValue }) => {
         value={value}
         onChange={handleChange}
         input={<Input label="Severity" />}
-        renderValue={(selected) => `severity: ${selected.join(", ")}`}
+        renderValue={(selected) => <SelectInputRenderer selected={selected} />}
         MenuProps={MenuProps}
         displayEmpty
       >
-        {allSeverities.map((name) => (
+        {highToLowRankedSeverities.map((name) => (
           <MenuItem key={name} value={name} sx={{ padding: 0 }}>
             <Checkbox checked={value.indexOf(name) > -1} />
-            <ListItemText primary={name} />
+            <SeverityCell value={name} field={knownColumnNames.severity} />
           </MenuItem>
         ))}
       </Select>
     </FormControl>
+  );
+};
+
+const SelectInputRenderer = ({ selected }) => {
+  return (
+    <div className="d-f g-4 ai-c">
+      Severity:
+      {R.pipe(
+        R.filter(R.includes(R.__, selected)),
+        R.map((severity) => (
+          <SeverityCell
+            key={severity}
+            value={severity}
+            field={knownColumnNames.severity}
+          />
+        ))
+      )(highToLowRankedSeverities)}
+    </div>
   );
 };

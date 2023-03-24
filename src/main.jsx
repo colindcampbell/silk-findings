@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./components/App";
-import { worker } from "./database/api";
+import { worker } from "./backend/api";
 import "./styles/index.css";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";

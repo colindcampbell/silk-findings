@@ -11,7 +11,12 @@ import {
 } from "chart.js";
 import { Doughnut, Bar } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { chartColorsByField, modelTypes, rankedSeverities } from "../constants";
+import {
+  chartColorsByField,
+  modelTypes,
+  highToLowRankedSeverities,
+  rankedSeverities,
+} from "../constants";
 import * as R from "ramda";
 import axios from "axios";
 import { capitalize, mapIndexed, toggleItemInList } from "../utils";
@@ -161,7 +166,10 @@ const calcGroupedDataForPieChart = (field, rawData) => {
     {
       label: capitalize(field),
       data: R.values(rawData),
-      backgroundColor: calcSeverityBackgroundColors(field, rankedSeverities),
+      backgroundColor: calcSeverityBackgroundColors(
+        field,
+        highToLowRankedSeverities
+      ),
     },
   ];
   return {

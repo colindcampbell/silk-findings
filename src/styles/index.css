@@ -68,8 +68,26 @@ button:focus-visible {
   }
 }
 
+.ta-c {
+  text-align: center;
+}
+.d-b {
+  display: block;
+}
+.pos-r {
+  position: relative;
+}
+.pos-a {
+  position: absolute;
+}
 .d-f {
   display: flex;
+}
+.g-4 {
+  gap: 4px;
+}
+.g-6 {
+  gap: 6px;
 }
 .ai-c {
   align-items: center;

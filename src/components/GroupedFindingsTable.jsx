@@ -1,4 +1,8 @@
-import { modelTypes, rankedSeverities } from "../constants";
+import {
+  highToLowRankedSeverities,
+  modelTypes,
+  rankedSeverities,
+} from "../constants";
 import { AsyncTable } from "./AsyncTable";
 import { GroupedFindingsRowDetails } from "./GroupedFindingsRowDetails";
 import { create } from "zustand";
@@ -6,7 +10,7 @@ import { FilterBar } from "./FilterBar";
 import * as R from "ramda";
 
 const initialState = {
-  severity: rankedSeverities,
+  severity: highToLowRankedSeverities,
   text: "",
 };
 

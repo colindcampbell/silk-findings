@@ -107,8 +107,11 @@ const filterBySeverity = R.curry((params, collection) => {
 const filterByText = R.curry((params, collection) => {
   const textFilter = params.get("filter[text]");
   if (existsAndIsNotEmpty(textFilter)) {
+    const textFilterNormalized = R.pipe(R.toLower, (val) => val.trim())(
+      textFilter
+    );
     collection = collection.filter(
-      R.pipe(R.values, R.toString, R.includes(textFilter))
+      R.pipe(R.values, R.toString, R.toLower, R.includes(textFilterNormalized))
     );
   }
   return collection;

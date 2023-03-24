@@ -16,6 +16,8 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import useResizeObserver from "use-resize-observer";
+import { getCellRenderer } from "./CellRenderers";
+import "../styles/Table.css";
 
 export const Table = ({
   columns,
@@ -42,7 +44,7 @@ export const Table = ({
               {R.map(
                 ({ name, ...columnConfig }) => (
                   <TableHeaderCell
-                    key={name}
+                    key={`${name}-header`}
                     name={name}
                     sort={sort}
                     createSortHandler={createSortHandler}
@@ -57,7 +59,7 @@ export const Table = ({
             {R.map(
               (row) => (
                 <TableBodyRow
-                  key={row.id}
+                  key={`${row.id}-${row.model}`}
                   columns={columns}
                   RowDetailRenderer={RowDetailRenderer}
                   tableContainerWidth={tableContainerWidth}
@@ -112,14 +114,15 @@ const TableBodyRow = ({
             </IconButton>
           </TableCell>
         )}
-        {R.map(
-          ({ name }) => (
+        {R.map(({ name, type, props = {} }) => {
+          const Renderer = getCellRenderer(type);
+          const value = R.prop(name, row);
+          return (
             <TableCell component="th" scope="row" key={`${row.id}-${name}`}>
-              {R.prop(name, row)}
+              <Renderer value={value} field={name} {...row} {...props} />
             </TableCell>
-          ),
-          columns
-        )}
+          );
+        }, columns)}
       </TableRow>
       {isOpen && (
         <TableRow>
