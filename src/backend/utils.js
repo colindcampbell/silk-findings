@@ -1,13 +1,16 @@
 import * as R from "ramda";
-import { rankedSeverities } from "../constants";
+import { knownColumnNames, rankedSeverities } from "../constants";
 import { existsAndIsNotEmpty, isNotNil } from "../utils";
 
 export const decorateList = (model, list) =>
   R.map(
     R.pipe(
       R.assoc("model", model),
-      R.converge(R.assoc("severityWeight"), [
-        R.pipe(R.prop("severity"), R.indexOf(R.__, rankedSeverities)),
+      R.converge(R.assoc(knownColumnNames.severityWeight), [
+        R.pipe(
+          R.prop(knownColumnNames.severity),
+          R.indexOf(R.__, rankedSeverities)
+        ),
         R.identity,
       ])
     )
@@ -49,7 +52,10 @@ const filterBySeverity = R.curry((params, collection) => {
   const severityFilter = params.get("filter[severity]");
   if (isNotNil(severityFilter)) {
     collection = collection.filter(
-      R.pipe(R.prop("severity"), R.includes(R.__, severityFilter))
+      R.pipe(
+        R.prop(knownColumnNames.severity),
+        R.includes(R.__, severityFilter)
+      )
     );
   }
   return collection;

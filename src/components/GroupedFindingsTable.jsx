@@ -1,7 +1,7 @@
 import {
   highToLowRankedSeverities,
+  knownColumnNames,
   modelTypes,
-  rankedSeverities,
 } from "../constants";
 import { AsyncTable } from "./AsyncTable";
 import { GroupedFindingsRowDetails } from "./GroupedFindingsRowDetails";
@@ -23,13 +23,13 @@ export const useGroupedFindingsFilter = create((set, get) => ({
 }));
 
 const apiFilterSelector = R.pipe(
-  R.pick(["severity", "text"]),
-  R.over(R.lensProp("severity"), R.join(","))
+  R.pick([knownColumnNames.severity, "text"]),
+  R.over(R.lensProp(knownColumnNames.severity), R.join(","))
 );
 
 export const GroupedFindingsTable = () => {
   const [severity, text, setFilter] = useGroupedFindingsFilter(
-    R.props(["severity", "text", "setFilter"])
+    R.props([knownColumnNames.severity, "text", "setFilter"])
   );
   const apiFilter = useGroupedFindingsFilter(apiFilterSelector);
 
@@ -39,7 +39,7 @@ export const GroupedFindingsTable = () => {
         text={text}
         setText={setFilter("text")}
         severity={severity}
-        setSeverity={setFilter("severity")}
+        setSeverity={setFilter(knownColumnNames.severity)}
       />
       <AsyncTable
         label="Grouped Findings"

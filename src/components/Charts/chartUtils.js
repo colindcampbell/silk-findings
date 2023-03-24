@@ -1,6 +1,7 @@
 import {
   chartColorsByField,
   highToLowRankedSeverities,
+  knownColumnNames,
   rankedSeverities,
 } from "../../constants";
 import { capitalize, mapIndexed, toggleItemInList } from "../../utils";
@@ -43,7 +44,7 @@ export const decorateOptionsWithClickHandler = (setSeverity) => {
         clickedSeverity,
         currentSeverities
       );
-      return R.assoc("severity", updatedSeverities);
+      return R.assoc(knownColumnNames.severity, updatedSeverities);
     });
   };
   const pieOptions = R.assoc("onClick", onClick, basePieOptions);
@@ -91,7 +92,7 @@ const calcSeverityBackgroundColors = calcBackgroundColors(rankedSeverities);
 
 const decorateChartColors = (severities, pieData, barData) => {
   const updatedBackgroundColors = calcSeverityBackgroundColors(
-    "severity",
+    knownColumnNames.severity,
     severities
   );
   const pieDataWithColors = updatePieDataBackgroundColors(

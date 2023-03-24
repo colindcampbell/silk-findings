@@ -53,7 +53,7 @@ export const knownIconTypes = {
 const knownColumnSettings = {
   [knownColumnNames.severity]: {
     name: knownColumnNames.severity,
-    sortField: "severityWeight",
+    sortField: knownColumnNames.severityWeight,
     isSortEnabled: true,
     type: knownColumnTypes.severity,
   },
@@ -113,7 +113,7 @@ const knownColumnSettings = {
     label: "Source",
     type: knownColumnTypes.iconText,
     props: {
-      iconType: "tool",
+      iconType: knownIconTypes.tool,
     },
   },
   [knownColumnNames.source_security_tool_id]: {
