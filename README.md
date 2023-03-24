@@ -8,7 +8,7 @@ Install packages and start server:
 npm i && npm run preview
 ```
 
-Go to http://localhost:4173/
+Once started, go to http://localhost:4173/
 
 ## Tools Used
 
@@ -19,4 +19,10 @@ Go to http://localhost:4173/
 
 ### Frontend
 
--
+- HTTP client: [Axios](https://axios-http.com/)
+- Caching and data fetching layer: [React Query](https://tanstack.com/query/v4)
+- UI components: [Material UI](https://mui.com/material-ui/getting-started/overview/)
+- Bundler and local server: [Vite](https://vitejs.dev/)
+- State management: [Zustand](https://docs.pmnd.rs/zustand/getting-started/introduction)
+- Charts: [react-chartjs-2](https://react-chartjs-2.js.org/)
+- Functional programming utilities: [Ramda](https://ramdajs.com/)
