@@ -10,7 +10,7 @@ import { visuallyHidden } from "@mui/utils";
 import Box from "@mui/material/Box";
 import * as R from "ramda";
 import { calcLabelFromName, isNotNil } from "../utils";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IconButton from "@mui/material/IconButton";
@@ -101,6 +101,9 @@ const TableBodyRow = ({
 }) => {
   const hasRowDetails = isNotNil(RowDetailRenderer);
   const [isOpen, setIsOpen] = useState(false);
+  const toggleIsOpen = useCallback(() => {
+    setIsOpen((val) => !val);
+  }, [setIsOpen]);
   return (
     <>
       <TableRow
@@ -114,7 +117,7 @@ const TableBodyRow = ({
             <IconButton
               aria-label="expand row"
               size="small"
-              onClick={() => setIsOpen((val) => !val)}
+              onClick={toggleIsOpen}
             >
               {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
@@ -125,7 +128,13 @@ const TableBodyRow = ({
           const value = R.prop(name, row);
           return (
             <TableCell component="th" scope="row" key={`${row.id}-${name}`}>
-              <Renderer value={value} field={name} {...row} {...props} />
+              <Renderer
+                value={value}
+                field={name}
+                {...row}
+                {...props}
+                toggleIsOpen={toggleIsOpen}
+              />
             </TableCell>
           );
         }, columns)}

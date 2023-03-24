@@ -87,7 +87,7 @@ const IconTextCell = ({ value, iconType }) => {
     </div>
   );
 };
-const FindingCountCell = ({ field, id }) => {
+const FindingCountCell = ({ field, id, toggleIsOpen }) => {
   const { isLoading, data = {} } = useQuery({
     queryKey: [
       modelTypes.findings,
@@ -102,12 +102,14 @@ const FindingCountCell = ({ field, id }) => {
     queryFn: modelGetOperation,
     keepPreviousData: true,
   });
+
   return (
     <Loading isLoading={isLoading}>
       <ChipCell
         label={R.path(["meta", "totalCount"], data)}
         field={field}
         value="default"
+        onClick={toggleIsOpen}
       />
     </Loading>
   );
