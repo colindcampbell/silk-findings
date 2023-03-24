@@ -1,6 +1,7 @@
 import Paper from "@mui/material/Paper";
 import { Table } from "./Table";
 import { useAsyncTable } from "../hooks/useAsyncTable";
+import { Loading } from "./Loading";
 
 export const AsyncTable = ({
   label,
@@ -19,27 +20,31 @@ export const AsyncTable = ({
     records,
     sort,
     totalCount,
+    isLoading,
   } = useAsyncTable({
     model,
     hasPagination,
     filter,
   });
+
   return (
-    <Paper className="d-f f-1 fd-c w-100 h-100 ovf-h">
-      <Table
-        columns={columns}
-        createSortHandler={createSortHandler}
-        label={label}
-        onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
-        pageOffsetCount={pageOffsetCount}
-        perPageCount={perPageCount}
-        records={records}
-        sort={sort}
-        totalCount={totalCount}
-        RowDetailRenderer={RowDetailRenderer}
-        hasPagination={hasPagination}
-      />
-    </Paper>
+    <Loading isLoading={isLoading}>
+      <Paper className="d-f f-1 fd-c w-100 h-100 ovf-h">
+        <Table
+          columns={columns}
+          createSortHandler={createSortHandler}
+          label={label}
+          onPageChange={onPageChange}
+          onRowsPerPageChange={onRowsPerPageChange}
+          pageOffsetCount={pageOffsetCount}
+          perPageCount={perPageCount}
+          records={records}
+          sort={sort}
+          totalCount={totalCount}
+          RowDetailRenderer={RowDetailRenderer}
+          hasPagination={hasPagination}
+        />
+      </Paper>
+    </Loading>
   );
 };

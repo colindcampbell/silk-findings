@@ -44,7 +44,6 @@ function App() {
               TransitionProps={{
                 timeout: "auto",
               }}
-              defaultExpanded
               sx={{ marginBottom: 1 }}
               className="ovf-h"
             >

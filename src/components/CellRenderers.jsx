@@ -20,6 +20,7 @@ import * as R from "ramda";
 import { modelGetOperation } from "../service";
 import { useQuery } from "@tanstack/react-query";
 import "../styles/Cell.css";
+import { Loading } from "./Loading";
 
 const severityIconMap = {
   [knownSeverities.critical]: WhatshotIcon,
@@ -101,15 +102,14 @@ const FindingCountCell = ({ field, id }) => {
     queryFn: modelGetOperation,
     keepPreviousData: true,
   });
-  if (isLoading) {
-    return "loading...";
-  }
   return (
-    <ChipCell
-      label={R.path(["meta", "totalCount"], data)}
-      field={field}
-      value="default"
-    />
+    <Loading isLoading={isLoading}>
+      <ChipCell
+        label={R.path(["meta", "totalCount"], data)}
+        field={field}
+        value="default"
+      />
+    </Loading>
   );
 };
 const DefaultCell = ({ value }) => value;

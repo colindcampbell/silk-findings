@@ -17,6 +17,7 @@ import { useGroupedFindingsFilter } from "../GroupedFindingsTable";
 import { useQuery } from "@tanstack/react-query";
 import { modelGetOperation } from "../../service";
 import { decorateOptionsWithClickHandler, loadChartData } from "./chartUtils";
+import { Loading } from "../Loading";
 
 ChartJS.register(
   ArcElement,
@@ -50,16 +51,13 @@ export const Charts = ({ field, sort, model }) => {
 
   const [pieOptions, barOptions] = useMemo(
     () => decorateOptionsWithClickHandler(setSeverity),
-    [setSeverity]
+    []
   );
 
-  if (isLoading) {
-    return "loading...";
-  }
   return (
-    <>
+    <Loading isLoading={isLoading}>
       <Doughnut options={pieOptions} data={pieData} />
       <Bar options={barOptions} data={barData} />
-    </>
+    </Loading>
   );
 };
