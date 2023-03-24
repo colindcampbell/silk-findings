@@ -9,7 +9,7 @@ export const useAsyncTable = ({ model, hasPagination = true, filter }) => {
   const { sort, createSortHandler } = useSort({ model });
 
   const { perPageCount, pageOffsetCount, onPageChange, onRowsPerPageChange } =
-    usePagination(hasPagination);
+    usePagination(hasPagination, model);
 
   const queryBundle = useQuery({
     queryKey: [
@@ -28,16 +28,16 @@ export const useAsyncTable = ({ model, hasPagination = true, filter }) => {
 
   const exports = useMemo(
     () => ({
+      columns: R.path([model, "columns"], modelConstants),
+      createSortHandler,
       isLoading: R.prop("isLoading", queryBundle),
       records: R.pathOr([], ["data", "data"], queryBundle),
-      createSortHandler,
-      columns: R.path([model, "columns"], modelConstants),
       sort,
       ...(hasPagination && {
-        perPageCount,
-        pageOffsetCount,
         onPageChange,
         onRowsPerPageChange,
+        pageOffsetCount,
+        perPageCount,
         totalCount: R.pathOr(0, ["data", "meta", "totalCount"], queryBundle),
       }),
     }),
@@ -57,7 +57,7 @@ const useSort = ({ model }) => {
   return { sort, createSortHandler };
 };
 
-const usePagination = (hasPagination) => {
+const usePagination = (hasPagination, model) => {
   const [perPageCount, setPerPageCount] = useState(100);
   const [pageOffsetCount, setPageOffsetCount] = useState(0);
 
@@ -67,11 +67,15 @@ const usePagination = (hasPagination) => {
 
   const handlePageChange = (e, newPageOffsetCount) => {
     setPageOffsetCount(newPageOffsetCount);
+    const scrollTargetEl = document.getElementById(`${model}-content`);
+    if (scrollTargetEl) {
+      scrollTargetEl.scrollIntoView(true);
+    }
   };
 
   const handleRowsPerPageChange = (e) => {
     setPerPageCount(parseInt(e.target.value, 10));
-    setPageOffsetCount(0);
+    handlePageChange(e, 0);
   };
   return {
     perPageCount,

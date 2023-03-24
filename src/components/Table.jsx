@@ -22,22 +22,28 @@ import "../styles/Table.css";
 export const Table = ({
   columns,
   createSortHandler,
+  hasPagination,
   label,
+  model,
   onPageChange,
   onRowsPerPageChange,
   pageOffsetCount,
   perPageCount,
   records,
+  RowDetailRenderer,
   sort,
   totalCount,
-  RowDetailRenderer,
-  hasPagination,
 }) => {
   const { ref, width: tableContainerWidth } = useResizeObserver();
   return (
     <>
       <TableContainer className="f-1 ofv-a" ref={ref}>
-        <MuiTable size="small" stickyHeader aria-label={label}>
+        <MuiTable
+          size="small"
+          stickyHeader
+          aria-label={label}
+          id={`${model}-content`}
+        >
           <TableHead>
             <TableRow>
               {isNotNil(RowDetailRenderer) && <TableCell />}
@@ -151,12 +157,12 @@ const TableBodyRow = ({
 };
 
 const TableHeaderCell = ({
-  name,
-  label: passedLabel,
-  sort = {},
   createSortHandler,
-  isSortEnabled,
   defaultSort = "desc",
+  isSortEnabled,
+  label: passedLabel,
+  name,
+  sort = {},
   sortField,
 }) => {
   const label = passedLabel || calcLabelFromName(name);

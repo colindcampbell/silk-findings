@@ -4,15 +4,16 @@ import { useAsyncTable } from "../hooks/useAsyncTable";
 import { Loading } from "./Loading";
 
 export const AsyncTable = ({
+  filter,
+  hasPagination,
   label,
   model,
-  hasPagination,
   RowDetailRenderer,
-  filter,
 }) => {
   const {
     columns,
     createSortHandler,
+    isLoading,
     onPageChange,
     onRowsPerPageChange,
     pageOffsetCount,
@@ -20,7 +21,6 @@ export const AsyncTable = ({
     records,
     sort,
     totalCount,
-    isLoading,
   } = useAsyncTable({
     model,
     hasPagination,
@@ -33,16 +33,17 @@ export const AsyncTable = ({
         <Table
           columns={columns}
           createSortHandler={createSortHandler}
+          hasPagination={hasPagination}
           label={label}
+          model={model}
           onPageChange={onPageChange}
           onRowsPerPageChange={onRowsPerPageChange}
           pageOffsetCount={pageOffsetCount}
           perPageCount={perPageCount}
           records={records}
+          RowDetailRenderer={RowDetailRenderer}
           sort={sort}
           totalCount={totalCount}
-          RowDetailRenderer={RowDetailRenderer}
-          hasPagination={hasPagination}
         />
       </Paper>
     </Loading>

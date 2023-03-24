@@ -16,7 +16,6 @@ queryClient.setDefaultOptions({
     retry: 2,
     cacheTime: 1000 * 60 * 10, // 10 minutes
     refetchIntervalInBackground: false,
-    suspense: false,
     staleTime: 1000 * 60 * 5, // 5 minutes it's stale
   },
 });
