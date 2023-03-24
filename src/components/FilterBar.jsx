@@ -1,7 +1,6 @@
 import Input from "@mui/material/Input";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
 import Box from "@mui/material/Box";
@@ -12,7 +11,6 @@ import { highToLowRankedSeverities, knownColumnNames } from "../constants";
 import { useCallback, useState } from "react";
 import { debounce } from "debounce";
 import { SeverityCell } from "./CellRenderers";
-import { capitalize } from "../utils";
 
 export const FilterBar = ({ severity, setSeverity, text, setText }) => {
   return (
@@ -61,12 +59,13 @@ const MenuProps = {
 };
 
 const SeveritySelect = ({ value, setValue }) => {
-  const handleChange = (event) => {
-    const newValue = R.path(["target", "value"], event);
-    setValue(
-      // On autofill we get a stringified value.
-      R.is(String, newValue) ? value.split(",") : newValue
-    );
+  const handleChange = (e) => {
+    const newValue = R.pipe(
+      R.path(["target", "value"]),
+      (val) => (R.is(String, val) ? value.split(",") : val),
+      (val) => R.filter(R.includes(R.__, val), highToLowRankedSeverities)
+    )(e);
+    setValue(newValue);
   };
   return (
     <FormControl sx={{ m: 0 }}>

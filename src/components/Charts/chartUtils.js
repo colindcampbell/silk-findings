@@ -1,37 +1,10 @@
-import { useEffect, useState, useMemo } from "react";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-} from "chart.js";
-import { Doughnut, Bar } from "react-chartjs-2";
-import ChartDataLabels from "chartjs-plugin-datalabels";
 import {
   chartColorsByField,
-  modelTypes,
   highToLowRankedSeverities,
   rankedSeverities,
-} from "../constants";
+} from "../../constants";
+import { capitalize, mapIndexed, toggleItemInList } from "../../utils";
 import * as R from "ramda";
-import axios from "axios";
-import { capitalize, mapIndexed, toggleItemInList } from "../utils";
-import { useGroupedFindingsFilter } from "./GroupedFindingsTable";
-
-ChartJS.register(
-  ArcElement,
-  Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  ChartDataLabels
-);
 
 const basePieOptions = {
   responsive: true,
@@ -49,57 +22,20 @@ const basePieOptions = {
   },
 };
 
-export const ChartContainer = ({ field, sort }) => {
-  const [pieData, setPieData] = useState();
-  const [barData, setBarData] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-
-  const [severity, setSeverity] = useGroupedFindingsFilter(
-    R.props(["severity", "setSeverity"])
+export const loadChartData = R.curry((field, severity, response) => {
+  const { barData, pieData } = decorateChartColors(
+    severity,
+    calcGroupedDataForPieChart(field, response.data),
+    calcGroupedDataForBarChart(field, response.data)
   );
-
-  useEffect(() => {
-    axios
-      .get(`/${modelTypes.groupedFindings}/grouped`, {
-        params: {
-          field,
-          sort,
-        },
-      })
-      .then((response) => {
-        setIsLoading(false);
-        setPieData(calcGroupedDataForPieChart(field, response.data.data));
-        setBarData(calcGroupedDataForBarChart(field, response.data.data));
-      });
-  }, []);
-
-  useEffect(() => {
-    if (!isLoading) {
-      updateChartColors(severity, setPieData, setBarData);
-    }
-  }, [severity, isLoading]);
-
-  const [pieOptions, barOptions] = useMemo(
-    () => decorateOptionsWithClickHandler(setSeverity, setPieData, setBarData),
-    [setSeverity, setPieData, setBarData]
-  );
-
-  if (isLoading) {
-    return "loading...";
-  }
-  return (
-    <>
-      <Doughnut options={pieOptions} data={pieData} />
-      <Bar options={barOptions} data={barData} />
-    </>
-  );
-};
+  return { pieData, barData };
+});
 
 const calcBarOptions = R.pipe(
   R.assocPath(["plugins", "legend", "display"], false)
 );
 
-const decorateOptionsWithClickHandler = (setSeverity) => {
+export const decorateOptionsWithClickHandler = (setSeverity) => {
   const onClick = (e, chart) => {
     setSeverity((currentSeverities) => {
       const clickedSeverity = R.prop(chart[0].index, rankedSeverities);
@@ -121,8 +57,11 @@ const updatePieDataBackgroundColors = (updatedBackgroundColors) =>
 const updateBarDataBackgroundColors = (updatedBackgroundColors) =>
   R.over(
     R.lensProp("datasets"),
-    mapIndexed((dataset, i) =>
-      R.assoc("backgroundColor", R.prop(i, updatedBackgroundColors), dataset)
+    R.pipe(
+      R.defaultTo([]),
+      mapIndexed((dataset, i) =>
+        R.assoc("backgroundColor", R.prop(i, updatedBackgroundColors), dataset)
+      )
     )
   );
 
@@ -150,13 +89,21 @@ const calcBackgroundColors = (baseColors) => (field, values) =>
 
 const calcSeverityBackgroundColors = calcBackgroundColors(rankedSeverities);
 
-const updateChartColors = (severities, setPieData, setBarData) => {
+const decorateChartColors = (severities, pieData, barData) => {
   const updatedBackgroundColors = calcSeverityBackgroundColors(
     "severity",
     severities
   );
-  setPieData(updatePieDataBackgroundColors(updatedBackgroundColors));
-  setBarData(updateBarDataBackgroundColors(updatedBackgroundColors));
+  const pieDataWithColors = updatePieDataBackgroundColors(
+    updatedBackgroundColors
+  )(pieData);
+  const barDataWithColors = updateBarDataBackgroundColors(
+    updatedBackgroundColors
+  )(barData);
+  return {
+    pieData: pieDataWithColors,
+    barData: barDataWithColors,
+  };
 };
 
 const calcGroupedDataForPieChart = (field, rawData) => {

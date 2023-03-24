@@ -7,11 +7,29 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-worker.start();
+const queryClient = new QueryClient();
+queryClient.setDefaultOptions({
+  queries: {
+    retry: 2,
+    cacheTime: 1000 * 60 * 10, // 10 minutes
+    refetchIntervalInBackground: false,
+    suspense: false,
+    staleTime: 1000 * 60 * 5, // 5 minutes it's stale
+  },
+});
+
+worker.start({
+  quiet: true,
+});
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <App />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+    </QueryClientProvider>
   </React.StrictMode>
 );

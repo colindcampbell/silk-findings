@@ -1,36 +1,35 @@
 import { modelConstants } from "../constants";
 import * as R from "ramda";
-import { useState, useEffect, useMemo } from "react";
-import axios from "axios";
+import { useState, useMemo } from "react";
 import { isNotNil } from "../utils";
+import { useQuery } from "@tanstack/react-query";
+import { modelGetOperation } from "../service";
 
 export const useAsyncTable = ({ model, hasPagination = true, filter }) => {
-  const [records, setRecords] = useState([]);
-  const [totalCount, setTotalCount] = useState(0);
   const { sort, createSortHandler } = useSort({ model });
 
   const { perPageCount, pageOffsetCount, onPageChange, onRowsPerPageChange } =
     usePagination(hasPagination);
 
-  useEffect(() => {
-    axios
-      .get(`/${model}/filter`, {
-        params: {
-          sort,
-          perPageCount,
-          pageOffsetCount,
-          ...(isNotNil(filter) && { filter }),
-        },
-      })
-      .then((response) => {
-        setRecords(response.data.data);
-        setTotalCount(response.data.meta.totalCount);
-      });
-  }, [sort.field, sort.direction, perPageCount, pageOffsetCount, filter]);
+  const queryBundle = useQuery({
+    queryKey: [
+      model,
+      "filter",
+      {
+        sort,
+        perPageCount,
+        pageOffsetCount,
+        ...(isNotNil(filter) && { filter }),
+      },
+    ],
+    queryFn: modelGetOperation,
+    keepPreviousData: true,
+  });
 
   const exports = useMemo(
     () => ({
-      records,
+      isLoading: R.prop("isLoading", queryBundle),
+      records: R.pathOr([], ["data", "data"], queryBundle),
       createSortHandler,
       columns: R.path([model, "columns"], modelConstants),
       sort,
@@ -39,17 +38,10 @@ export const useAsyncTable = ({ model, hasPagination = true, filter }) => {
         pageOffsetCount,
         onPageChange,
         onRowsPerPageChange,
-        totalCount,
+        totalCount: R.pathOr(0, ["data", "meta", "totalCount"], queryBundle),
       }),
     }),
-    [
-      records,
-      createSortHandler,
-      onPageChange,
-      onRowsPerPageChange,
-      totalCount,
-      sort,
-    ]
+    [queryBundle, createSortHandler, onPageChange, onRowsPerPageChange, sort]
   );
 
   return exports;

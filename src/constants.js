@@ -42,7 +42,7 @@ export const knownColumnTypes = {
   link: "link",
   severity: "severity",
   status: "status",
-  statusProgress: "statusProgress", // Also show the progress status bar
+  statusProgress: "statusProgress",
 };
 
 export const knownIconTypes = {
@@ -178,15 +178,18 @@ export const modelConstants = {
 };
 
 export const chartColorsByField = {
-  severity: {
+  [knownColumnNames.severity]: {
     critical: "#E9694A",
     high: "#F3C02F",
     medium: "#96B5DE",
     low: "#99BE71",
   },
-  status: {
+  [knownColumnNames.status]: {
     in_progress: "#2F85EC",
     open: "#2F85EC",
+  },
+  [knownColumnNames.finding_count]: {
+    default: "#6e559d",
   },
 };
 

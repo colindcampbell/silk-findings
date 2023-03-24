@@ -13,7 +13,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Paper from "@mui/material/Paper";
-import { ChartContainer } from "./ChartContainer";
+import { Charts } from "./Charts";
 import useResizeObserver from "use-resize-observer";
 import { GroupedFindingsTable } from "./GroupedFindingsTable";
 
@@ -62,7 +62,7 @@ function App() {
                 sx={{ height: 360, width: width - 32 }}
                 className="d-f ovf-a jc-c"
               >
-                <ChartContainer
+                <Charts
                   field="severity"
                   sort={{ field: "severityWeight", direction: "asc" }}
                 />

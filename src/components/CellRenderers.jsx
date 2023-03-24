@@ -3,8 +3,12 @@ import {
   knownColumnTypes,
   knownIconTypes,
   knownSeverities,
+  modelConstants,
+  modelTypes,
 } from "../constants";
 import Chip from "@mui/material/Chip";
+import Box from "@mui/material/Box";
+import Tooltip from "@mui/material/Tooltip";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
 import ErrorIcon from "@mui/icons-material/Error";
 import WarningIcon from "@mui/icons-material/Warning";
@@ -13,8 +17,9 @@ import FaceIcon from "@mui/icons-material/Face";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import { calcLabelFromName } from "../utils";
 import * as R from "ramda";
+import { modelGetOperation } from "../service";
+import { useQuery } from "@tanstack/react-query";
 import "../styles/Cell.css";
-import Box from "@mui/material/Box";
 
 const severityIconMap = {
   [knownSeverities.critical]: WhatshotIcon,
@@ -27,9 +32,9 @@ export const ChipCell = ({ value, field, ...rest }) => {
   const backgroundColor = R.path([field, value], chartColorsByField);
   return (
     <Chip
-      {...rest}
       label={calcLabelFromName(value)}
       sx={{ backgroundColor, color: "white" }}
+      {...rest}
     />
   );
 };
@@ -53,16 +58,17 @@ const StatusProgressCell = ({ value, field, progress }) => {
   return (
     <div className="d-f fd-c g-6 ai-c w-100">
       <ChipCell value={value} field={field} size="small" />
-      <Box
-        sx={{ width: 160, border: 2, borderColor: "divider" }}
-        className="progress-bar"
-        title={`${progressPercent} Complete`}
-      >
+      <Tooltip title={`${progressPercent} Complete`}>
         <Box
-          className={`${progressClassName} progress-bar`}
-          sx={{ width: progressPercent }}
-        />
-      </Box>
+          sx={{ width: 160, border: 2, borderColor: "divider" }}
+          className="progress-bar"
+        >
+          <Box
+            className={`${progressClassName} progress-bar`}
+            sx={{ width: progressPercent }}
+          />
+        </Box>
+      </Tooltip>
     </div>
   );
 };
@@ -80,7 +86,32 @@ const IconTextCell = ({ value, iconType }) => {
     </div>
   );
 };
-const FindingCountCell = ({ value }) => value;
+const FindingCountCell = ({ field, id }) => {
+  const { isLoading, data = {} } = useQuery({
+    queryKey: [
+      modelTypes.findings,
+      "filter",
+      {
+        filter: {
+          grouped_finding_id: id,
+        },
+        sort: modelConstants[modelTypes.findings].defaultSort,
+      },
+    ],
+    queryFn: modelGetOperation,
+    keepPreviousData: true,
+  });
+  if (isLoading) {
+    return "loading...";
+  }
+  return (
+    <ChipCell
+      label={R.path(["meta", "totalCount"], data)}
+      field={field}
+      value="default"
+    />
+  );
+};
 const DefaultCell = ({ value }) => value;
 
 const knownCellRenders = {
