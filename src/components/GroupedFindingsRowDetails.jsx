@@ -10,8 +10,7 @@ import * as R from "ramda";
 import { DefinitionList } from "./DefinitionList";
 import { calcLabelFromName } from "../utils";
 
-export function GroupedFindingsRowDetails(props) {
-  const { id, columns, ...row } = props;
+export const GroupedFindingsRowDetails = ({ id, columns, ...row }) => {
   const [value, setValue] = useState("1");
 
   const handleChange = (e, newValue) => {
@@ -59,4 +58,4 @@ export function GroupedFindingsRowDetails(props) {
       </TabContext>
     </Box>
   );
-}
+};

@@ -18,7 +18,7 @@ import useResizeObserver from "use-resize-observer";
 import { GroupedFindingsTable } from "./GroupedFindingsTable";
 import { notEquals } from "../utils";
 
-function App() {
+const App = () => {
   const [value, setValue] = useState("1");
 
   const handleChange = (e, newValue) => {
@@ -80,7 +80,7 @@ function App() {
       </Box>
     </div>
   );
-}
+};
 
 export default App;
 
