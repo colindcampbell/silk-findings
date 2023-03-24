@@ -36,3 +36,10 @@ Once started, go to http://localhost:4173/
 - Query caching for near instant rendering of the table detail panel
 - Sorted Raw Findings table in addition to the Grouped Findings table
 - Text filtering on the table
+
+## TODO: Possible Fixes and Improvements
+
+- Changing the table filters should also reset the pagination (use Zustand for pagination state)
+- Add the graphs and filter bar to the Raw Findings table
+- Fix the the page layout so that the width of the app container doesn't have to be passed down
+- Tree map visualization for severity where you can drill down on progress for each severity type
