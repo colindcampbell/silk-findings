@@ -191,8 +191,9 @@ export const chartColorsByField = {
     low: "#99BE71",
   },
   [knownColumnNames.status]: {
+    fixed: "#429E78",
     in_progress: "#2F85EC",
-    open: "#2F85EC",
+    open: "#E29309",
   },
   [knownColumnNames.finding_count]: {
     default: "#6e559d",
