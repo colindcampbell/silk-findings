@@ -133,6 +133,8 @@ const calcGroupedDataForBarChart = (field, rawData) => {
     (fieldValue, i) => ({
       data: R.assoc(i, R.prop(fieldValue, rawData), []),
       backgroundColor: R.path([field, fieldValue], chartColorsByField),
+      stack: 1,
+      barThickness: 60,
     }),
     fieldValues
   );
