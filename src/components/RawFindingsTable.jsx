@@ -1,18 +1,17 @@
 import { knownColumnNames, modelTypes } from "../constants";
 import { AsyncTable } from "./AsyncTable";
-import { GroupedFindingsRowDetails } from "./GroupedFindingsRowDetails";
 import { FilterBar } from "./FilterBar";
 import * as R from "ramda";
 import {
-  useGroupedFindingsApiFilter,
-  useGroupedFindingsStore,
+  useRawFindingsApiFilter,
+  useRawFindingsStore,
 } from "../hooks/useModelState";
 
-export const GroupedFindingsTable = () => {
-  const [severity, text, setFilter] = useGroupedFindingsStore(
+export const RawFindingsTable = () => {
+  const [severity, text, setFilter] = useRawFindingsStore(
     R.props([knownColumnNames.severity, "text", "setFilter"])
   );
-  const apiFilter = useGroupedFindingsApiFilter();
+  const apiFilter = useRawFindingsApiFilter();
 
   return (
     <>
@@ -23,9 +22,8 @@ export const GroupedFindingsTable = () => {
         setSeverity={setFilter(knownColumnNames.severity)}
       />
       <AsyncTable
-        label="Grouped Findings"
-        model={modelTypes.groupedFindings}
-        RowDetailRenderer={GroupedFindingsRowDetails}
+        label="Raw Findings"
+        model={modelTypes.findings}
         hasPagination
         filter={apiFilter}
         setFilter={setFilter}

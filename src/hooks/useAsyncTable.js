@@ -59,7 +59,7 @@ const useSort = ({ model, onPageChange }) => {
 };
 
 const usePagination = (hasPagination, model) => {
-  const [perPageCount, setPerPageCount] = useState(100);
+  const [perPageCount, setPerPageCount] = useState(25);
   const [pageOffsetCount, setPageOffsetCount] = useState(0);
 
   if (!hasPagination) {

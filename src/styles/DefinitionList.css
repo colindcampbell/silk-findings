@@ -3,6 +3,7 @@ dl.container {
   grid-template-columns: auto 1fr;
   grid-template-rows: repeat(50, min-content);
   background-color: #ffffff;
+  margin: 0;
 }
 dt {
   grid-column-start: 1;

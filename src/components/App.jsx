@@ -1,6 +1,9 @@
 import "../styles/App.css";
 import { modelTypes } from "../constants";
-import { AsyncTable } from "./AsyncTable";
+import { GroupedFindingsTable } from "./GroupedFindingsTable";
+import { notEquals } from "../utils";
+import { ChartsContainer } from "./Charts";
+import { RawFindingsTable } from "./RawFindingsTable";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -9,9 +12,6 @@ import TabList from "@mui/lab/TabList";
 import MuiTabPanel from "@mui/lab/TabPanel";
 import Paper from "@mui/material/Paper";
 import useResizeObserver from "use-resize-observer";
-import { GroupedFindingsTable } from "./GroupedFindingsTable";
-import { notEquals } from "../utils";
-import { ChartsContainer } from "./Charts";
 
 const App = () => {
   const [value, setValue] = useState("1");
@@ -35,17 +35,16 @@ const App = () => {
             </TabList>
           </Box>
           <TabPanel currentTab={value} value="1" width={width}>
-            <ChartsContainer width={width} />
+            <ChartsContainer width={width} model={modelTypes.groupedFindings} />
             <Paper className="f-1 d-f fd-c ovf-h w-100" elevation={1}>
               <GroupedFindingsTable />
             </Paper>
           </TabPanel>
           <TabPanel currentTab={value} value="2" width={width}>
-            <AsyncTable
-              label="Findings"
-              model={modelTypes.findings}
-              hasPagination
-            />
+            <ChartsContainer width={width} model={modelTypes.findings} />
+            <Paper className="f-1 d-f fd-c ovf-h w-100" elevation={1}>
+              <RawFindingsTable />
+            </Paper>
           </TabPanel>
         </TabContext>
       </Box>

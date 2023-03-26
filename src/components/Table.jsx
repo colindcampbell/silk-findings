@@ -17,6 +17,7 @@ import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
 import useResizeObserver from "use-resize-observer";
 import { getCellRenderer } from "./CellRenderers";
+import cn from "classnames";
 import "../styles/Table.css";
 
 export const Table = ({
@@ -31,6 +32,7 @@ export const Table = ({
   perPageCount,
   records,
   RowDetailRenderer,
+  setFilter,
   sort,
   totalCount,
 }) => {
@@ -68,6 +70,7 @@ export const Table = ({
                   key={`${row.id}-${row.model}`}
                   columns={columns}
                   RowDetailRenderer={RowDetailRenderer}
+                  setFilter={setFilter}
                   tableContainerWidth={tableContainerWidth}
                   {...row}
                 />
@@ -96,6 +99,7 @@ export const Table = ({
 const TableBodyRow = ({
   columns,
   RowDetailRenderer,
+  setFilter,
   tableContainerWidth,
   ...row
 }) => {
@@ -110,7 +114,9 @@ const TableBodyRow = ({
         sx={{
           "&:last-child td, &:last-child th": { border: 0 },
           ...(hasRowDetails && { "& > *": { borderBottom: "unset" } }),
+          ...(isOpen && { borderBottom: 0 }),
         }}
+        className={cn({ expanded: isOpen })}
       >
         {hasRowDetails && (
           <TableCell>
@@ -133,6 +139,7 @@ const TableBodyRow = ({
                 field={name}
                 {...row}
                 {...props}
+                setFilter={setFilter}
                 toggleIsOpen={toggleIsOpen}
               />
             </TableCell>
@@ -140,17 +147,17 @@ const TableBodyRow = ({
         }, columns)}
       </TableRow>
       {isOpen && (
-        <TableRow>
+        <TableRow className="expanded">
           <TableCell
-            style={{ padding: 1 }}
+            sx={{ padding: 0, borderBottomWidth: 1, borderColor: "#92b1db" }}
             colSpan={R.pipe(R.length, R.add(1))(columns)}
           >
             <Collapse in={isOpen} timeout="auto" unmountOnExit>
               <Box
                 sx={{
-                  padding: 0.5,
-                  paddingBottom: 0,
-                  width: tableContainerWidth - 8, // subtract margin
+                  padding: 1.5,
+                  paddingTop: 0,
+                  width: tableContainerWidth - 24, // subtract margin
                   position: "sticky",
                   left: 0,
                 }}

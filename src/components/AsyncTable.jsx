@@ -9,6 +9,7 @@ export const AsyncTable = ({
   label,
   model,
   RowDetailRenderer,
+  setFilter,
 }) => {
   const {
     columns,
@@ -42,6 +43,7 @@ export const AsyncTable = ({
           perPageCount={perPageCount}
           records={records}
           RowDetailRenderer={RowDetailRenderer}
+          setFilter={setFilter}
           sort={sort}
           totalCount={totalCount}
         />

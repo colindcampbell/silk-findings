@@ -19,7 +19,7 @@ export const GroupedFindingsRowDetails = ({ id, columns, ...row }) => {
 
   return (
     <Box
-      sx={{ width: "100%", typography: "body1", height: 360 }}
+      sx={{ width: "100%", typography: "body1", padding: 0 }}
       className="d-f fd-c ovf-a"
     >
       <TabContext value={value}>
@@ -41,7 +41,7 @@ export const GroupedFindingsRowDetails = ({ id, columns, ...row }) => {
             hasPagination={false}
           />
         </TabPanel>
-        <TabPanel sx={{ padding: 1.5 }} value="2">
+        <TabPanel sx={{ padding: 0, margin: 0 }} value="2">
           <DefinitionList
             items={R.map(
               ({ name, label }) => ({

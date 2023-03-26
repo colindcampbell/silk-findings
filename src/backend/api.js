@@ -17,5 +17,9 @@ export const worker = setupWorker(
       req
     );
     return res(ctx.status(200), ctx.json(response));
+  }),
+  rest.get(`/${modelTypes.findings}/grouped`, async (req, res, ctx) => {
+    const response = await handleGroupedResponse(modelTypes.findings, req);
+    return res(ctx.status(200), ctx.json(response));
   })
 );

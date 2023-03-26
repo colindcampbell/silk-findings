@@ -1,3 +1,7 @@
 tbody tr:nth-child(odd) {
   background: #f6f6f6;
 }
+
+tr.expanded.expanded {
+  background: #dfecfc;
+}

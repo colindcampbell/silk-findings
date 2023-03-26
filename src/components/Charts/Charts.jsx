@@ -11,9 +11,8 @@ import {
 } from "chart.js";
 import { Doughnut, Bar } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { knownColumnNames, modelTypes, sortDirections } from "../../constants";
+import { knownColumnNames, sortDirections } from "../../constants";
 import * as R from "ramda";
-import { useGroupedFindingsFilter } from "../GroupedFindingsTable";
 import { useQuery } from "@tanstack/react-query";
 import { modelGetOperation } from "../../service";
 import { decorateOptionsWithClickHandler, loadChartData } from "./chartUtils";
@@ -23,6 +22,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { modelStoreHooks } from "../../hooks/useModelState";
 
 ChartJS.register(
   ArcElement,
@@ -40,7 +40,7 @@ const chartSort = {
   direction: sortDirections.asc,
 };
 
-export const ChartsContainer = ({ width }) => {
+export const ChartsContainer = ({ width, model }) => {
   return (
     <Accordion
       TransitionProps={{
@@ -63,7 +63,7 @@ export const ChartsContainer = ({ width }) => {
         <Charts
           field={knownColumnNames.severity}
           sort={chartSort}
-          model={modelTypes.groupedFindings}
+          model={model}
         />
       </AccordionDetails>
     </Accordion>
@@ -71,7 +71,8 @@ export const ChartsContainer = ({ width }) => {
 };
 
 export const Charts = memo(({ field, sort, model }) => {
-  const [severity, setSeverity] = useGroupedFindingsFilter(
+  const useModelStore = R.prop(model, modelStoreHooks);
+  const [severity, setSeverity] = useModelStore(
     R.props([knownColumnNames.severity, "setSeverity"])
   );
 
