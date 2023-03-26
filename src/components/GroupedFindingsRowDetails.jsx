@@ -6,9 +6,8 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { AsyncTable } from "./AsyncTable";
 import { modelTypes } from "../constants";
-import * as R from "ramda";
 import { DefinitionList } from "./DefinitionList";
-import { calcLabelFromName } from "../utils";
+import { calcDefinitionListItems } from "../utils";
 
 export const GroupedFindingsRowDetails = ({ id, columns, ...row }) => {
   const [value, setValue] = useState("1");
@@ -42,18 +41,7 @@ export const GroupedFindingsRowDetails = ({ id, columns, ...row }) => {
           />
         </TabPanel>
         <TabPanel sx={{ padding: 0, margin: 0 }} value="2">
-          <DefinitionList
-            items={R.map(
-              ({ name, label }) => ({
-                label: label || calcLabelFromName(name),
-                value: R.pipe(
-                  R.prop(name),
-                  R.when(R.is(String), calcLabelFromName)
-                )(row),
-              }),
-              columns
-            )}
-          />
+          <DefinitionList items={calcDefinitionListItems(row, columns)} />
         </TabPanel>
       </TabContext>
     </Box>

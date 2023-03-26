@@ -4,11 +4,11 @@ import { FilterBar } from "./FilterBar";
 import * as R from "ramda";
 import {
   useRawFindingsApiFilter,
-  useRawFindingsStore,
+  useRawFindingsState,
 } from "../hooks/useModelState";
 
 export const RawFindingsTable = () => {
-  const [severity, text, setFilter] = useRawFindingsStore(
+  const [severity, text, setFilter] = useRawFindingsState(
     R.props([knownColumnNames.severity, "text", "setFilter"])
   );
   const apiFilter = useRawFindingsApiFilter();

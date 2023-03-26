@@ -12,7 +12,7 @@ const initialState = {
   text: "",
 };
 
-export const modelStoreHandler = (set, get) => ({
+export const modelStateHandler = (set, get) => ({
   ...initialState,
   setFilter: R.curry((key, value) => {
     set(R.assoc(key, isFunction(value) ? value(get().severity) : value));
@@ -25,15 +25,15 @@ export const apiFilterSelector = R.pipe(
   R.over(R.lensProp(knownColumnNames.severity), R.join(","))
 );
 
-export const useGroupedFindingsStore = create(modelStoreHandler);
+export const useGroupedFindingsState = create(modelStateHandler);
 export const useGroupedFindingsApiFilter = () =>
-  useGroupedFindingsStore(apiFilterSelector);
+  useGroupedFindingsState(apiFilterSelector);
 
-export const useRawFindingsStore = create(modelStoreHandler);
+export const useRawFindingsState = create(modelStateHandler);
 export const useRawFindingsApiFilter = () =>
-  useRawFindingsStore(apiFilterSelector);
+  useRawFindingsState(apiFilterSelector);
 
-export const modelStoreHooks = {
-  [modelTypes.findings]: useRawFindingsStore,
-  [modelTypes.groupedFindings]: useGroupedFindingsStore,
+export const modelStateHooks = {
+  [modelTypes.findings]: useRawFindingsState,
+  [modelTypes.groupedFindings]: useGroupedFindingsState,
 };

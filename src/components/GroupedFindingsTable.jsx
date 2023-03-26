@@ -5,11 +5,11 @@ import { FilterBar } from "./FilterBar";
 import * as R from "ramda";
 import {
   useGroupedFindingsApiFilter,
-  useGroupedFindingsStore,
+  useGroupedFindingsState,
 } from "../hooks/useModelState";
 
 export const GroupedFindingsTable = () => {
-  const [severity, text, setFilter] = useGroupedFindingsStore(
+  const [severity, text, setFilter] = useGroupedFindingsState(
     R.props([knownColumnNames.severity, "text", "setFilter"])
   );
   const apiFilter = useGroupedFindingsApiFilter();

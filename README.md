@@ -36,13 +36,14 @@ Once started, go to http://localhost:4173/
 - Configurable table pagination
 - Query caching for near instant rendering of the table detail panel
 - Raw findings table with graphs, sorting, and filtering functionality
-- Text filtering on the tables
+- Debounced text filtering on the tables
 - Sticky row detail panel
 
 ## TODO: Possible Fixes and Improvements
 
 - ~Add the graphs and filter bar to the Raw Findings table~
 - ~Make dates more readable~
+- Add tests for utility functions
 - Changing the table filters should also reset the pagination (use Zustand for pagination state)
 - Fix the the page layout so that the width of the app container doesn't have to be passed down
 - Tree map visualization for severity where you can drill down on progress for each severity type

@@ -1,33 +1,39 @@
 import * as R from "ramda";
 
 export const modelTypes = {
-  groupedFindings: "groupedFindings",
   findings: "findings",
+  groupedFindings: "groupedFindings",
 };
 
 export const knownColumnNames = {
-  severity: "severity",
-  grouped_finding_created: "grouped_finding_created",
-  sla: "sla",
+  asset: "asset",
   description: "description",
-  security_analyst: "security_analyst",
+  finding_count: "finding_count",
+  finding_created: "finding_created",
+  grouped_finding_created: "grouped_finding_created",
+  grouping_key: "grouping_key",
+  grouping_type: "grouping_type",
+  model: "model",
   owner: "owner",
-  workflow: "workflow",
+  progress: "progress",
+  remediation_text: "remediation_text",
+  remediation_url: "remediation_url",
+  security_analyst: "security_analyst",
+  severity: "severity",
+  severityWeight: "severityWeight", // Added for sorting
+  sla: "sla",
+  source_collbartion_tool_name: "source_collbartion_tool_name",
+  source_security_tool_id: "source_security_tool_id",
+  source_security_tool_name: "source_security_tool_name",
   status: "status",
   statusProgress: "statusProgress",
-  progress: "progress",
-  grouping_type: "grouping_type",
-  grouping_key: "grouping_key",
-  finding_created: "finding_created",
-  finding_count: "finding_count",
-  source_security_tool_name: "source_security_tool_name",
-  source_security_tool_id: "source_security_tool_id",
   ticket_created: "ticket_created",
-  source_collbartion_tool_name: "source_collbartion_tool_name",
-  asset: "asset",
-  remediation_url: "remediation_url",
-  remediation_text: "remediation_text",
-  severityWeight: "severityWeight", // Added for sorting
+  workflow: "workflow",
+};
+
+export const apiActions = {
+  filter: "filter",
+  group: "group",
 };
 
 export const sortDirections = {

@@ -1,4 +1,4 @@
-import { modelConstants, sortDirections } from "../constants";
+import { apiActions, modelConstants, sortDirections } from "../constants";
 import * as R from "ramda";
 import { useState, useMemo } from "react";
 import { isNotNil } from "../utils";
@@ -14,7 +14,7 @@ export const useAsyncTable = ({ model, hasPagination = true, filter }) => {
   const queryBundle = useQuery({
     queryKey: [
       model,
-      "filter",
+      apiActions.filter,
       {
         sort,
         perPageCount,

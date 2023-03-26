@@ -1,3 +1,8 @@
+import { useCallback, useState } from "react";
+import * as R from "ramda";
+import cn from "classnames";
+import { calcLabelFromName, isNotNil } from "../utils";
+import useResizeObserver from "use-resize-observer";
 import MuiTable from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,16 +13,12 @@ import TablePagination from "@mui/material/TablePagination";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { visuallyHidden } from "@mui/utils";
 import Box from "@mui/material/Box";
-import * as R from "ramda";
-import { calcLabelFromName, isNotNil } from "../utils";
-import { useCallback, useState } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import IconButton from "@mui/material/IconButton";
 import Collapse from "@mui/material/Collapse";
-import useResizeObserver from "use-resize-observer";
+import Tooltip from "@mui/material/Tooltip";
 import { getCellRenderer } from "./CellRenderers";
-import cn from "classnames";
 import "../styles/Table.css";
 
 export const Table = ({
@@ -120,13 +121,18 @@ const TableBodyRow = ({
       >
         {hasRowDetails && (
           <TableCell>
-            <IconButton
-              aria-label="expand row"
-              size="small"
-              onClick={toggleIsOpen}
+            <Tooltip
+              title={`${isOpen ? "Hide" : "View"} findings`}
+              placement="top"
             >
-              {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-            </IconButton>
+              <IconButton
+                aria-label="expand row"
+                size="small"
+                onClick={toggleIsOpen}
+              >
+                {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+            </Tooltip>
           </TableCell>
         )}
         {R.map(({ name, type, props = {} }) => {
@@ -141,6 +147,7 @@ const TableBodyRow = ({
                 {...props}
                 setFilter={setFilter}
                 toggleIsOpen={toggleIsOpen}
+                isOpen={isOpen}
               />
             </TableCell>
           );

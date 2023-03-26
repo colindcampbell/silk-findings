@@ -1,4 +1,4 @@
-import { useMemo, memo } from "react";
+import { useMemo } from "react";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -11,7 +11,7 @@ import {
 } from "chart.js";
 import { Doughnut, Bar } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { knownColumnNames, sortDirections } from "../../constants";
+import { apiActions, knownColumnNames, sortDirections } from "../../constants";
 import * as R from "ramda";
 import { useQuery } from "@tanstack/react-query";
 import { modelGetOperation } from "../../service";
@@ -22,7 +22,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { modelStoreHooks } from "../../hooks/useModelState";
+import { modelStateHooks } from "../../hooks/useModelState";
 
 ChartJS.register(
   ArcElement,
@@ -70,16 +70,16 @@ export const ChartsContainer = ({ width, model }) => {
   );
 };
 
-export const Charts = memo(({ field, sort, model }) => {
-  const useModelStore = R.prop(model, modelStoreHooks);
-  const [severity, setSeverity] = useModelStore(
+export const Charts = ({ field, sort, model }) => {
+  const useModelState = R.prop(model, modelStateHooks);
+  const [severity, setSeverity] = useModelState(
     R.props([knownColumnNames.severity, "setSeverity"])
   );
 
   const { isLoading, data: { barData = {}, pieData = {} } = {} } = useQuery({
     queryKey: [
       model,
-      "grouped",
+      apiActions.group,
       {
         field,
         sort,
@@ -101,4 +101,4 @@ export const Charts = memo(({ field, sort, model }) => {
       <Bar options={barOptions} data={barData} />
     </Loading>
   );
-});
+};

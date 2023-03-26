@@ -11,6 +11,7 @@ import { highToLowRankedSeverities, knownColumnNames } from "../constants";
 import { useCallback, useState } from "react";
 import { debounce } from "debounce";
 import { SeverityCell } from "./CellRenderers";
+import { isString } from "../utils";
 
 export const FilterBar = ({ severity, setSeverity, text, setText }) => {
   return (
@@ -60,11 +61,7 @@ const MenuProps = {
 
 const SeveritySelect = ({ value, setValue }) => {
   const handleChange = (e) => {
-    const newValue = R.pipe(
-      R.path(["target", "value"]),
-      (val) => (R.is(String, val) ? value.split(",") : val),
-      (val) => R.filter(R.includes(R.__, val), highToLowRankedSeverities)
-    )(e);
+    const newValue = calcSeverityValue(e);
     setValue(newValue);
   };
   return (
@@ -80,12 +77,15 @@ const SeveritySelect = ({ value, setValue }) => {
         MenuProps={MenuProps}
         displayEmpty
       >
-        {highToLowRankedSeverities.map((name) => (
-          <MenuItem key={name} value={name} sx={{ padding: 0 }}>
-            <Checkbox checked={value.indexOf(name) > -1} />
-            <SeverityCell value={name} field={knownColumnNames.severity} />
-          </MenuItem>
-        ))}
+        {R.map(
+          (name) => (
+            <MenuItem key={name} value={name} sx={{ padding: 0 }}>
+              <Checkbox checked={R.includes(name, value)} />
+              <SeverityCell value={name} field={knownColumnNames.severity} />
+            </MenuItem>
+          ),
+          highToLowRankedSeverities
+        )}
       </Select>
     </FormControl>
   );
@@ -108,3 +108,9 @@ const SelectInputRenderer = ({ selected }) => {
     </div>
   );
 };
+
+const calcSeverityValue = R.pipe(
+  R.path(["target", "value"]),
+  (val) => (isString(val) ? val.split(",") : val),
+  (val) => R.filter(R.includes(R.__, val), highToLowRankedSeverities)
+);

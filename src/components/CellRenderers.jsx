@@ -1,4 +1,5 @@
 import {
+  apiActions,
   chartColorsByField,
   highToLowRankedSeverities,
   knownColumnTypes,
@@ -24,8 +25,9 @@ import "../styles/Cell.css";
 import { Loading } from "./Loading";
 import { lighten } from "@mui/material";
 import moment from "moment";
+import { forwardRef } from "react";
 
-export const ChipCell = ({ value, field, ...rest }) => {
+export const ChipCell = forwardRef(({ value, field, ...rest }, ref) => {
   const backgroundColor = R.path([field, value], chartColorsByField);
   return (
     <Chip
@@ -37,10 +39,11 @@ export const ChipCell = ({ value, field, ...rest }) => {
           backgroundColor: lighten(backgroundColor, 0.3),
         },
       }}
+      ref={ref}
       {...rest}
     />
   );
-};
+});
 
 export const SeverityCell = ({ value, field, setFilter }) => {
   const Icon = R.propOr(NullRender, value, severityIconMap);
@@ -67,7 +70,7 @@ const StatusProgressCell = ({ value, field, progress }) => {
   const progressClassName = calcProgressClassName(progress);
   const progressPercent = `${progress * 100}%`;
   return (
-    <div className="d-f fd-c g-6 ai-c w-100">
+    <Box className="d-f fd-c g-6 ai-c w-100" sx={{ width: 164 }}>
       <ChipCell value={value} field={field} size="small" />
       <Tooltip title={`${progressPercent} Complete`}>
         <Box
@@ -80,7 +83,7 @@ const StatusProgressCell = ({ value, field, progress }) => {
           />
         </Box>
       </Tooltip>
-    </div>
+    </Box>
   );
 };
 
@@ -94,11 +97,11 @@ const IconTextCell = ({ value, iconType }) => {
   );
 };
 
-const FindingCountCell = ({ field, id, toggleIsOpen }) => {
+const FindingCountCell = ({ field, id, toggleIsOpen, isOpen }) => {
   const { isLoading, data = {} } = useQuery({
     queryKey: [
       modelTypes.findings,
-      "filter",
+      apiActions.filter,
       {
         filter: {
           grouped_finding_id: id,
@@ -112,12 +115,14 @@ const FindingCountCell = ({ field, id, toggleIsOpen }) => {
 
   return (
     <Loading isLoading={isLoading}>
-      <ChipCell
-        label={R.path(["meta", "totalCount"], data)}
-        field={field}
-        value="default"
-        onClick={toggleIsOpen}
-      />
+      <Tooltip title={`${isOpen ? "Hide" : "View"} findings`} placement="top">
+        <ChipCell
+          label={R.path(["meta", "totalCount"], data)}
+          field={field}
+          value="default"
+          onClick={toggleIsOpen}
+        />
+      </Tooltip>
     </Loading>
   );
 };
@@ -136,8 +141,8 @@ const knownCellRenders = {
   [knownColumnTypes.datetime]: DatetimeCell,
 };
 
-export const getCellRenderer = (type) => {
-  return R.propOr(DefaultCell, type, knownCellRenders);
+export const getCellRenderer = (type, DefaultRenderer = DefaultCell) => {
+  return R.propOr(DefaultRenderer, type, knownCellRenders);
 };
 
 const severityIconMap = {
