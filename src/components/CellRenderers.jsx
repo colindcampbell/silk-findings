@@ -28,7 +28,11 @@ import moment from "moment";
 import { forwardRef } from "react";
 
 export const ChipCell = forwardRef(({ value, field, ...rest }, ref) => {
-  const backgroundColor = R.path([field, value], chartColorsByField);
+  const backgroundColor = R.pathOr(
+    "#666666",
+    [field, value],
+    chartColorsByField
+  );
   return (
     <Chip
       label={calcLabelFromName(value)}
