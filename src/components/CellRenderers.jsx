@@ -16,7 +16,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import FaceIcon from "@mui/icons-material/Face";
 import ConstructionIcon from "@mui/icons-material/Construction";
-import { calcLabelFromName, isFunction } from "../utils";
+import { calcLabelFromName, isFunction, NullRender } from "../utils";
 import * as R from "ramda";
 import { modelGetOperation } from "../service";
 import { useQuery } from "@tanstack/react-query";
@@ -43,7 +43,7 @@ export const ChipCell = ({ value, field, ...rest }) => {
 };
 
 export const SeverityCell = ({ value, field, setFilter }) => {
-  const Icon = R.prop(value, severityIconMap);
+  const Icon = R.propOr(NullRender, value, severityIconMap);
   const handleClick = () => {
     setFilter(field, (currentVal) =>
       R.equals(currentVal, [value]) ? highToLowRankedSeverities : [value]
@@ -85,7 +85,7 @@ const StatusProgressCell = ({ value, field, progress }) => {
 };
 
 const IconTextCell = ({ value, iconType }) => {
-  const Icon = R.prop(iconType, iconTypeMap);
+  const Icon = R.propOr(NullRender, iconType, iconTypeMap);
   return (
     <div className="d-f g-6 ai-c">
       <Icon />

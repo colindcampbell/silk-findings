@@ -21,3 +21,5 @@ export const mapIndexed = R.addIndex(R.map);
 export const toggleItemInList = R.curry((item, list) =>
   R.includes(item, list) ? R.without([item], list) : R.append(item, list)
 );
+
+export const NullRender = () => null;
