@@ -35,8 +35,8 @@ Once started, go to http://localhost:4173/
 - Sorting on the Severity, Time, and SLA fields
 - Configurable table pagination
 - Query caching for near instant rendering of the table detail panel
-- Sorted Raw Findings table in addition to the Grouped Findings table
-- Text filtering on the table
+- Raw findings table with graphs, sorting, and filtering functionality
+- Text filtering on the tables
 - Sticky row detail panel
 
 ## TODO: Possible Fixes and Improvements
